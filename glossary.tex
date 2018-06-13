@@ -1,4 +1,92 @@
+%
+% Acronyms
+%
+
+\newacronym{kpm}{KPM}{Key Performance Metric}
 \newacronym{qawg}{QAWG}{QA Strategy Working Group}
+
+%
+% Terminology
+%
+
+\newglossaryentry{aggregation}
+{
+  name={aggregation},
+  description={A single result---e.g., a \gls{metric value}---computed from a
+  collection of input values. For example, we can sum or average a
+  \gls{metric} computed over patches to produce an \gls{aggregate metric} at
+  tract level}
+}
+
+\newglossaryentry{aggregate metric}
+{
+  name={aggregate metric},
+  description={An \gls{aggregation} of multiple \glspl{point metric}. For
+  example, the overall photometric repeatability for a particular tract given
+  multiple observations of each star}
+}
+
+\newglossaryentry{dashboard}
+{
+  name={dashboard},
+  description={A visual display of the most important information needed to
+  achieve one or more objectives, consolidated and arranged on a single screen
+  so that the information can be monitored at a glance \citep{Few:2013}}
+}
+
+\newglossaryentry{drill down}
+{
+  name={drill down},
+  description={Move from a higher level aggregation of data to its inputs. For
+  example, given data describing a tract, we might drill down to constituent
+  patches and then to objects; given a visit, we might drill down to CCD and
+  then source. In the context of this document, it refers to the act of
+  identifying an issue in a high-level summary of the data (e.g. an aberrant
+  \gls{metric value}) and interactively investigating its inputs to find the
+  source of the problem}
+}
+
+\newglossaryentry{metric}
+{
+  name={metric},
+  description={We follow the \citeds{SQR-019} definition of a metric as a
+  measurable quantities which may be tracked. A metric has a name,
+  description, unit, references, and tags (which are used for grouping). A
+  metric is a scalar by definition. We consider multiple types of metric in
+  this document; see \gls{aggregate metric}, \gls{model metric}, \gls{point
+  metric}}
+}
+
+\newglossaryentry{metric value}
+{
+  name={metric value},
+  description={The result of computing a particular \gls{metric} on some given
+  data. Note that we \textit{compute}, rather than measure, metric values}
+}
+
+\newglossaryentry{model metric}
+{
+  name={model metric},
+  description={A \gls{metric} describing a model related to the data. For
+  example, the coefficients of a 2D polynomial fit to the background of a
+  single CCD exposure}
+}
+
+\newglossaryentry{monitoring}
+{
+  name={monitoring},
+  description={The process of collecting, storing, aggregating and visualizing
+  metrics}
+}
+
+\newglossaryentry{point metric}
+{
+  name={point metric},
+  description={A \gls{metric} that is associated with a single entry in a
+  catalog. Examples include the shape of a source, the standard deviation of
+  the flux of an object detected on a coadd, the flux of an source detected on
+  a difference image}
+}
 
 \newglossaryentry{releaseable product}
 {
@@ -6,6 +94,14 @@
   description={A software package or other component of the DM system which
   is expected to be included in the next tagged release of the system. At time
   of writing, this implies inclusion in a standard top-level package
-  (lsst\_distrib), but we note that future changes to the release procedure
-  may render that definition obsolete.}
+  (e.g. lsst\_distrib), but we note that future changes to the release procedure
+  may render that definition obsolete}
+}
+
+\newglossaryentry{tidy data}
+{
+  name={tidy data},
+  description={Tidy datasets have a specific structure: each variable is a
+  column, each observation is a row, and each type of observational unit is a
+  table \citep{JSSv059i10}}
 }
