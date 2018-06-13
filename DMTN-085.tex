@@ -66,9 +66,101 @@ addressing its charge as defined in \citeds{LDM-622}.
 
 \section{Core components}
 
-%\section{Requirements}
-%\label{sec:req}
-%
+\subsection{Updated pipeline debugging system}
+
+i.e. redesigned \texttt{lsstDebug}.
+
+\subsection{Logging}
+
+\subsection{Capability for developers to run pipelines at scale}
+
+\subsection{Guidance on visualization}
+
+We're requesting a set of guidelines for developers here, not a new framework
+--- but that's still a concrete deliverable (it's just documentation, rather
+than code). We might suggest that these guidelines be developed by a new WG,
+per Simon's
+suggestion\footnote{\url{https://confluence.lsstcorp.org/display/DM/Pipeline+Debugging+Design}}.
+
+\subsection{Image viewer}
+
+As of 2018-06-12 we haven't converged on a solid recommendation here.
+
+Key considerations:
+
+\begin{itemize}
+
+  \item{Firefly is the annointed solution being provided by DM to external
+  stakeholders (commissioning, operations, etc). It feels right to everybody
+  that we should be dogfooding it, and also benefitting from development being
+  carried out for those stakeholders.}
+
+  \item{Currently, Firefly is unappealing to developers (primarily, I think,
+  because of slowness of user interface, and perhaps also due to installation
+  issues). Can we resolve these issues?}
+
+  \item{We'd want to support visualization in a number of different
+  environments, for e.g.:
+
+    \begin{itemize}
+
+      \item{Inside a Jupyter notebook;}
+      \item{As a standalone tool, \`a la DS9;}
+      \item{Embedded in a \gls{dashboard}, \`a la JS9, Aladin-Lite, etc.}
+
+    \end{itemize}
+  }
+
+  \item{Do we lose flexibility by mandating the use of a backend-agnostic API
+  (\texttt{afwDisplay}) rather than going ``all-in'' on e.g. a custom Firefly
+  interface?}
+
+  \item{We'll need to do full focal plane visualization, which none(?) of the
+  current tools support well.}
+
+\end{itemize}
+
+Options include:
+
+\begin{itemize}
+
+  \item{Do nothing; continue as we are, which means most people will use DS9
+  and a few will drift to Firefly as commissioning ramps up.}
+
+  \item{Issue some sort of edict that pipelines developers have to use
+  Firefly.}
+
+  \item{Encourage the use of some other tool (Ginga?) instead of or as well as
+  some of the above.}
+
+  \item{Probably others.}
+
+\end{itemize}
+
+Sounds like we need somebody from the QAWG to actually write some requirements
+--- or a wishlist set of features we want --- here.
+
+\subsection{Catalog visualization tools}
+
+For visualizing bigger-than-memory catalogs. May include e.g. the capability
+to spin up Dask clusters on demand, combined with
+Holoviews/Datashader/whatever. Somebody who knows about this stuff needs to
+write a summary...
+
+\subsection{Provenance}
+
+This section should note:
+
+\begin{itemize}
+
+  \item{That provenance is an immediate issue impacting QA work, so a solution
+  is a priority;}
+
+  \item{Some requirements as to the granularity at which provenance tracking
+  is necessary for QA.}
+
+\end{itemize}
+
 \appendix
 \glsaddall
 \printglossary[style=index]
