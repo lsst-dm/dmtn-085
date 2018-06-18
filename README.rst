@@ -31,6 +31,6 @@ You can clone this repository and build the technote locally with LaTeX:
 
 .. code-block:: bash
 
-   git clone https://github.com/lsst-dm/dmtn-085
+   git clone --recurse-submodules https://github.com/lsst-dm/dmtn-085
    cd dmtn-085
    make
