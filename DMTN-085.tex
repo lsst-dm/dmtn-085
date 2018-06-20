@@ -129,61 +129,31 @@ suggestion\footnote{\url{https://confluence.lsstcorp.org/display/DM/Pipeline+Deb
 
 \assign{Trey}
 
-As of 2018-06-12 we haven't converged on a solid recommendation here.
+There are two approaches to doing image visualization.  When a developer is working on a laptop with a
+small amount of data and viewing image results locally then DS9 or an equivilent desktop application seems
+to be the best solution.
 
-Key considerations:
+In the case where the data is on some remote server then visualization needs to
+be more advanced. Here we recommend using Firefly web based image visulization. A large Firefly server(s) near the
+data will allow quicker and simpler visualization. The data is not required to be moved to the laptop to visualize.
 
+To be effective for QA Firefly should have the following functionallity:
 \begin{itemize}
-
-  \item{Firefly is the annointed solution being provided by DM to external
-  stakeholders (commissioning, operations, etc). It feels right to everybody
-  that we should be dogfooding it, and also benefitting from development being
-  carried out for those stakeholders.}
-
-  \item{Currently, Firefly is unappealing to developers (primarily, I think,
-  because of slowness of user interface, and perhaps also due to installation
-  issues). Can we resolve these issues?}
-
-  \item{We'd want to support visualization in a number of different
-  environments, for e.g.:
-
-    \begin{itemize}
-
-      \item{Inside a Jupyter notebook;}
-      \item{As a standalone tool, \`a la DS9;}
-      \item{Embedded in a \gls{dashboard}, \`a la JS9, Aladin-Lite, etc.}
-
-    \end{itemize}
-  }
-
-  \item{Do we lose flexibility by mandating the use of a backend-agnostic API
-  (\texttt{afwDisplay}) rather than going ``all-in'' on e.g. a custom Firefly
-  interface?}
-
-  \item{We'll need to do full focal plane visualization, which none(?) of the
-  current tools support well.}
-
+  \item{Work as a standalone tool. }
+  \item{Work with the afw.display API.}
+  \item{Provide an API that allows a user to acess more advanced features than afw.display provides.
+  Possibly afw.display API should be enhanced in certain cases.}
+  \item{Work as an extension in Jupyter Lab. For example- click on a FITS file and see it show in Firefly.}
+  \item{Work as a Jupyter Lab widget.}
+  \item{Provide a way to show tabular data on images.}
+  \item{Provide HiPS viewing.}
+  \item{Work with all major QA use cases and ensure good performance.}
+  \item{Implement full focal plane visualization.}
+  \item
 \end{itemize}
 
-Options include:
+What else do we want here?
 
-\begin{itemize}
-
-  \item{Do nothing; continue as we are, which means most people will use DS9
-  and a few will drift to Firefly as commissioning ramps up.}
-
-  \item{Issue some sort of edict that pipelines developers have to use
-  Firefly.}
-
-  \item{Encourage the use of some other tool (Ginga?) instead of or as well as
-  some of the above.}
-
-  \item{Probably others.}
-
-\end{itemize}
-
-Sounds like we need somebody from the QAWG to actually write some requirements
---- or a wishlist set of features we want --- here.
 
 \subsection{Catalog visualization tools}
 
