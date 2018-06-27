@@ -3,11 +3,36 @@
 
 \assign{John}
 
+The QAWG addressed its charge by sub-dividing the problem space into three separate areas:
+
+\begin{itemize}
+
+  \item{Addressing the needs of developers writing and debugging algorithms on the small scale;}
+  \item{Developing tooling to address the \textit{\gls{drill down}} use case;}
+  \item{Providing the infrastructure needed to support automatic testing and verification.}
+
+\end{itemize}
+
+Each of these areas were assigned to a separate sub-group within the WG for
+brainstorming and developing approaches, with each sub-group regularly
+reporting progress to overall working group meetings.
+
+When each sub-group had developed a strong concept for the tooling needed to
+address their particular part of the charge, the whole working group reviewed
+each design in detail, identifying and developing specifications for common
+components or activities that enable one or more of the designs.
+
+In \S\S\ref{sec:approach:debug}, \ref{sec:approach:drill} and
+\ref{sec:approach:test}, we provide details about the charge provided to each
+sub-group. In \S\S\ref{sec:design:debug}, \ref{sec:design:drill} and \ we provide details about the charge provided to each
+
 \subsection{Pipeline debugging}
+\label{sec:approach:debug}
 
 \assign{John}
 
-What tools do we need to help pipeline developers with their everyday work?
+What tools do we need to help pipeline developers with their every-day work?
+Specifically:
 
 \begin{itemize}
 
@@ -22,9 +47,48 @@ What tools do we need to help pipeline developers with their everyday work?
 \end{itemize}
 
 \subsection{Drill down}
+\label{sec:approach:drill}
 
 \assign{John}
+
+How can we provide developers and testers with the ability to ``drill down''
+from high level aggregated metrics to explore the source data and intermediate
+data products that contributed to them? Specifically:
+
+\begin{itemize}
+
+  \item{What sort of metrics should be extracted from running
+  pipelines\footnote{Scalars, vectors, spatially binned quantities, etc.}?}
+  \item{How can those metrics be displayed on a dashboard? Is a simple
+  time-series adequate, or do we need other types of plotting?}
+  \item{By what mechanism can the user drill-down from those aggregated
+  metrics to identify the sources of problems? Do they click through
+  pre-generated plots, or jump straight into a notebook environment?}
+  \item{Assuming the user ends up in an interactive environment, what are its
+  capabilities?}
+  \item{What do the above tell us about the data products that pipelines need
+  to persist (both in terms of metrics that are posted to \gls{squash}, and
+  regular pipeline outputs, Parquet tables, HDF5 files, etc)?}
+
+\end{itemize}
 
 \subsection{Datasets and test infrastructure}
+\label{sec:approach:test}
 
 \assign{John}
+
+What infrastructure must we make available to enable testing and verification
+of the DM system? Specifically:
+
+\begin{itemize}
+
+  \item{Are any changes needed to the way that DM currently handles unit testing?}
+  \item{How are datasets made available to developers? Git LFS repositories?
+  \gls{gpfs}?}
+  \item{What is the appropriate cadence for running small/medium/large scale
+  integration tests and reprocessing of known data?}
+  \item{How is the system for tracking \glspl{metric} managed? --- how are the
+  metric calculation jobs run? By whom? How often?}
+  \item{How run-time performance of the science algorithms be tracked?}
+
+\end{itemize}
