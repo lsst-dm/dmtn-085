@@ -27,24 +27,22 @@ significantly.  We recommend high priority to finalize the design
 and implementation of the provenance system.
 
 The QAWG believes that the requirements on provenance tracking are
-adequate as descirbed in the Data Management Middleware Requirements
+adequate as described in the Data Management Middleware Requirements
 (\citeds{LDM-556}) and Data Management Data Backbone Services
 Requirements (\citeds{LDM-635}). QA use cases provide no further
 requirements.
 
 With the current design of the Gen 3 Middleware, each dataset
-contains provenance information such as input data repositories,
-immediate parents, task structure, configurations, and software.
+can be linked to provenance information such as input datasets,
+pipeline definition, configurations, and software version.
 QC metric values will be Butler datasets so they will be associated
 with specific data IDs, and their provenance can be traced like
-other datasets.  As the provenance system is a deliverable of both
-the Gen 3 Middleware and the Data Backbone, the QAWG stresses the
-importance of having one single source of truth for provenance.  We
-believe this is in line with the current development plan of the
-Gen 3 Middleware and the Data Backbone.  The Butler/SuperTask
-generated provenance is the primary source of provenance in the QA
-use cases.  For production runs, the Data Backbone may store
-additional provenance, besides the Butler/SuperTask generated
+other datasets.  The Gen3 Butler/SuperTask generated provenance is
+the primary source of provenance in the QA use cases as the
+Butler/SuperTask framework is responsible of producing provenance
+in the Gen 3 Middleware design.  For production runs, the Data
+Backbone Services may store additional provenance, for example from
+the Batch Production Services, besides the Butler/SuperTask generated
 provenance.
 
 Regarding provenance of the database records, the QAWG does not
@@ -57,10 +55,11 @@ input images acually contribute to the measurement of a particular
 source, but the full inputs that can contribute to the source.  The
 provenance tracking of synthetic sources is also unclear.  The QAWG
 thinks most low-level information can be uncovered through the drill
-down system (\S\ref{sec:design:drill}).  We recommend the tooling
-to investigate the composition of that coadd be made in the drill
-down system and does not put this requirement in the provenance
-system.
+down system (\S\ref{sec:design:drill}).  Diagnostic information can
+also be computed in the pipeline codes and stored as additional
+columns.  We recommend the tooling to investigate the composition
+of coadds be made in the drill down system and does not put this
+requirement in the provenance system.
 
 The QAWG notes that some high level aggregate data products that
 are derived from provenance data can be useful in QA work.  For
@@ -150,6 +149,32 @@ Broadly as current SQuaSH, but to track:
 Derived from \S\ref{sec:design:test}.
 
 \assign{Hsin-Fang}
+
+The standard format of a dataset package is a ready-to-use Butler
+repository and follows the format of a Butler repository as defined
+in its corresponding obs package.  The format is configurable by
+design, however, it is tied to the codes in the stack, so can change
+from a software stack version to another.  Besides implementations
+in the obs packages and Butler, other evolvement in the software
+stack, such as handling of calibration data and reference catalog,
+can also make a once-working repository incompatible.  Therefore,
+maintenance is occassionally needed to ensure the usability of a
+dataset package.  The QAWG recommends a per-dataset product owner.
+
+The Obs Pkg WG \jira{RFC-393} is charged to re-design and refactor
+the obs packages for maintainability and extensibility. We suggest
+the Obs Pkg WG take into considerations in their design to mitigate
+the close tie between a Butler repository and its obs package
+implmentations, as well as adopt a common structure across different
+cameras when possible.  After the refactoring, the obs packages
+will rarely change so the dataset format will be more stable.  The
+QAWG recommends prioritise the Obs Pkg WG.
+
+In some cases, a dataset pacakge may contain additional data not
+in the format of a Butler repository. We recommend the format as
+described in DM Developer Guide Common Dataset Organization and
+Policy \footnote{\url{https://developer.lsst.io/services/datasets.html}}
+and expand the policy as needed.
 
 \subsection{Standard test package design}
 
