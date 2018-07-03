@@ -110,6 +110,7 @@ Derived from \S\ref{sec:design:test}.
 \end{itemize}
 
 \subsection{CI system updates}
+\label{sec:comp:ci}
 
 Derived from \S\ref{sec:design:test}.
 
@@ -144,11 +145,35 @@ Broadly as current SQuaSH, but to track:
 \end{itemize}
 
 \subsection{Standard format dataset package}
-\label{sec:comp:lfs-dataset}
+\label{sec:comp:dataset}
 
 Derived from \S\ref{sec:design:test}.
 
 \assign{Hsin-Fang}
+
+The key considerations and motivations to standardize test datasets include:
+
+\begin{itemize}
+
+\item{Developers would like low-friction access to test datasets.
+A central location where developers can look up what has been curated
+is desired.}
+
+\item{Developers would like datasets at multiple scales and
+representative of various data quality and observing conditions.
+The properties of these datasets much be well understood.}
+
+\item{Besides raw (unprocessed) data, intermediate and final data
+products from various stages of pipeline processing are wanted.
+They facilitiate testing of algorithms which are only relevant to
+later parts of the pipeline or analysis codes without the need of
+regenerating the products.}
+
+\item{Datasets require continuing maintenance. Data products based
+on a recent release are usually wanted.}
+
+\end{itemize}
+
 
 The standard format of a dataset package is a ready-to-use Butler
 repository and follows the format of a Butler repository as defined
@@ -159,22 +184,72 @@ in the obs packages and Butler, other evolvement in the software
 stack, such as handling of calibration data and reference catalog,
 can also make a once-working repository incompatible.  Therefore,
 maintenance is occassionally needed to ensure the usability of a
-dataset package.  The QAWG recommends a per-dataset product owner.
+dataset package.  The QAWG recommends having a per-dataset product
+owner.  Product owners are responsible for ensuring that datasets
+are well described and compatible with recent stack versions.  The
+owner of a dataset can typically be the team with immediate use
+cases and knowledge of its camera package.
 
-The Obs Pkg WG \jira{RFC-393} is charged to re-design and refactor
+The Obs Pkg WG (\jira{RFC-393}) is charged to re-design and refactor
 the obs packages for maintainability and extensibility. We suggest
 the Obs Pkg WG take into considerations in their design to mitigate
 the close tie between a Butler repository and its obs package
 implmentations, as well as adopt a common structure across different
 cameras when possible.  After the refactoring, the obs packages
-will rarely change so the dataset format will be more stable.  The
+shall rarely change so the dataset format will be more stable.  The
 QAWG recommends prioritise the Obs Pkg WG.
 
 In some cases, a dataset pacakge may contain additional data not
-in the format of a Butler repository. We recommend the format as
-described in DM Developer Guide Common Dataset Organization and
-Policy \footnote{\url{https://developer.lsst.io/services/datasets.html}}
-and expand the policy as needed.
+in the format of a Butler repository. We recommend following the
+format as described in DM Developer Guide Common Dataset Organization
+and Policy \footnote{\url{https://developer.lsst.io/services/datasets.html}}
+and update the policy as needed.
+
+As for the storage of test datasets, we consider any test dataset
+package being either small or large, based on its size and use cases.
+
+\begin{itemize}
+  \item \textbf{Storage of small datasets}
+
+  We consider small datasets as those smaller than around 100 GB
+  and comfortably operatable as a Git LFS repository. They are
+  carefully selected to meet specific use cases. The use cases of
+  small datasets include
+
+  \begin{itemize}
+    \item{as input test data in CI jobs in the DM Jenkins system
+          (\S\ref{sec:comp:ci});}
+    \item{as example data in documentations, demos, and tutorials.}
+  \end{itemize}
+
+  To meet their needs, we recommend them
+
+  \begin{itemize}
+    \item{managed as eups packages;}
+    \item{stored as Git LFS repositories as needed;}
+    \item{tagged their versions with the software releases;}
+    \item{made publicly available on GitHub;}
+    \item{documented clearly its use cases and named product owner for each dataset;}
+  \end{itemize}
+
+  \item \textbf{Storage of large datasets}
+
+  We consider large datasets as those larger than around 100 GB and
+  hence transferring over network takes longer than an hour typically.
+  They can contain edge cases that have not been identified to form
+  specific small test datasets, or for use cases in which data
+  volume is important.  We recommend them
+
+  \begin{itemize}
+    \item{made available on LSST Development Machines (currently on GPFS);}
+    \item{protected under a disaster recovery policy;}
+    \item{shared by team members;}
+    \item{documented clearly its use cases and named product owner for each dataset;}
+  \end{itemize}
+
+\end{itemize}
+
+
 
 \subsection{Standard test package design}
 
