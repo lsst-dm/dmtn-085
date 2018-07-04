@@ -4,17 +4,17 @@
 \assign{Tim}
 
 Drill-down workflows center on the need to quickly and efficiently identify data processing problems.
-Typically these will be identified from discrepencies identified at higher levels of summary and aggregation.
-We emphasize the importance of ease-of-use for the QA analyst in order to shorten debugging cycles. 
+Typically these will be identified from discrepancies identified at higher levels of summary and aggregation.
+We emphasize the importance of ease-of-use for the QA analyst in order to shorten debugging cycles.
 Key capabilities include:
 
 \begin{itemize}
-	\item Rapid retrieval of relevant quantities (metric values, image cutouts, catalog overlays, etc.), 
-	\item Readily-(re)configurable interactive plotting tools 
+	\item Rapid retrieval of relevant quantities (metric values, image cutouts, catalog overlays, etc.),
+	\item Readily-(re)configurable interactive plotting tools
 	\item Automated regression testing
 \end{itemize}
 
-\subsubsection{Metric computation and persistance} \label{sec:metric_storage}
+\subsubsection{Metric computation and persistence} \label{sec:metric_storage}
 
 \begin{recommendation}
 Metric values should be stored with full granularity (source, CCD, patch, dataset).
@@ -24,12 +24,12 @@ Re-running pipelines to recompute metrics imposes a significant overhead to the 
 We therefore recommend that in general all computed metric values should be stored on disk at the highest relevant granularity.
 In some cases these are per-source (e.g., source FWHM or shape measurements) and may be included in the relevant object catalogs; in others the minimum granularity may be at the CCD, patch, or even dataset levels.
 This procedure provides the analyst the ability to filter metric values using arbitrary metadata (night, airmass, focal plane position, moon phase...) and re-aggregate to any level desired with any aggregation function (mean, median, percentiles, standard deviation, outliers...).
-Supplemental storage of higher-level aggegrates (e.g., mean FWHM by CCD) is discouraged because of duplication and loss of information, except where speed of visualization of \emph{key} quantities would be impaired due to the need to load large datasets.
+Supplemental storage of higher-level aggregates (e.g., mean FWHM by CCD) is discouraged because of duplication and loss of information, except where speed of visualization of \emph{key} quantities would be impaired due to the need to load large datasets.
 
 
 
 \begin{recommendation}
-Metric values should be stored as ``tidy data'' in columnular datastores (e.g., Parquet) on disk with the output data repository.
+Metric values should be stored as ``tidy data'' in columnar data stores (e.g., Parquet) on disk with the output data repository.
 \end{recommendation}
 
 ``Tidy data'' \citep{JSSv059i10} is recommended as a best practice for data analysis workflows, as it simplifies filter-groupby-aggregate workflows.
@@ -46,16 +46,24 @@ Metric values should have Butler dataIds.
 
 In order to facilitate joining and filtering metric values by other metadata, metric values should have appropriate Butler dataIds.
 
+\begin{recommendation}
+We should be able to use the Butler interface to persist and retrieve metric values.
+\end{recommendation}
+
 \subsubsection{Drill-down workflows and display} \label{sec:metric_displays}
 
 \begin{recommendation}
-The QA system should supply a configurable, interactive dashboard that runs on any pipeline output repository to quicky diagnose the data processing.
+The QA system should supply a configurable, interactive dashboard that runs on any pipeline output repository to quickly diagnose the data processing.
 The dashboard should summarize top-level global metrics and provide a selected set of key visualizations.
-These visualizations will be pipeline-specific.  
+These visualizations will be pipeline-specific.
 \end{recommendation}
 
 \begin{recommendation}
-The dashboard should anable the analyst to start a Jupyter notebook session with the relevant datasets already loaded.
+The dashboard should enable the analyst to start a Jupyter notebook session with the relevant datasets already loaded.
+\end{recommendation}
+
+\begin{recommendation}
+The same interactive dashboard should be able to read the metrics values from the local data repository and from the centralized system for tracking performance regressions.
 \end{recommendation}
 
 
@@ -66,9 +74,8 @@ The dashboard should anable the analyst to start a Jupyter notebook session with
 A centralized service should store and plot high-level aggregations of key performance metrics on several datasets that are regularly reprocessed in order to identify performance regressions or improvements due to pipeline changes.
 \end{recommendation}
 
-This is essentially the SQuaSH system.  
+This is essentially the SQuaSH system.
 The high-level aggregates may be constructed and submitted by an afterburner task that uses the per-repository metric storage.
-
 
 \begin{recommendation}
 An analyst should be able to start an interactive drill-down session exploring the output repository in question in ``one click'' from any given aggregate displayed by the SQuaSH system.
