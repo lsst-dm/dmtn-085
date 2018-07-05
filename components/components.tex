@@ -34,16 +34,17 @@ requirements.
 
 With the current design of the Gen 3 Middleware, each dataset
 can be linked to provenance information such as input datasets,
-pipeline definition, configurations, and software version.
+pipeline definition, configurations, and software version
+(e.g. DMS-MWST-REQ-0024 and DMS-MWBT-REQ-0096 in LDM-556).
 QC metric values will be Butler datasets so they will be associated
 with specific data IDs, and their provenance can be traced like
-other datasets.  The Gen3 Butler/SuperTask generated provenance is
-the primary source of provenance in the QA use cases as the
-Butler/SuperTask framework is responsible of producing provenance
-in the Gen 3 Middleware design.  For production runs, the Data
-Backbone Services may store additional provenance, for example from
-the Batch Production Services, besides the Butler/SuperTask generated
-provenance.
+other datasets. In the Gen 3 Middleware design, Butler/SuperTask
+framework is responsible of producing provenance.  For production
+runs, the Data Backbone Services may store additional provenance,
+for example from the Batch Production Services, besides the
+Butler/SuperTask generated provenance.  In the QA use cases, the
+primary source of provenance will be the Gen3 Butler/SuperTask
+generated provenance.
 
 Regarding provenance of the database records, the QAWG does not
 place a strong requirement on per-source provenance.  The current
@@ -151,7 +152,8 @@ Derived from \S\ref{sec:design:test}.
 
 \assign{Hsin-Fang}
 
-The key considerations and motivations to standardize test datasets include:
+The key considerations and motivations to standardize test datasets
+in the construction phase include:
 
 \begin{itemize}
 
@@ -170,7 +172,7 @@ later parts of the pipeline or analysis codes without the need of
 regenerating the products.}
 
 \item{Datasets require continuing maintenance. Data products based
-on a recent release are usually wanted.}
+on a recent software release are usually wanted.}
 
 \end{itemize}
 
@@ -184,11 +186,19 @@ in the obs packages and Butler, other evolvement in the software
 stack, such as handling of calibration data and reference catalog,
 can also make a once-working repository incompatible.  Therefore,
 maintenance is occassionally needed to ensure the usability of a
-dataset package.  The QAWG recommends having a per-dataset product
-owner.  Product owners are responsible for ensuring that datasets
-are well described and compatible with recent stack versions.  The
-owner of a dataset can typically be the team with immediate use
-cases and knowledge of its camera package.
+dataset package. \textbf{The QAWG recommends having a per-dataset product
+owner.}\footnote{At the time of writing, our test datasets include
+the following: afwdata, ap\_verify\_hits2015, testdata\_cfht,
+testdata\_deblender, testdata\_decam, testdata\_jointcal,
+testdata\_lsstSim, testdata\_subaru, qserv\_testdata,
+validation\_data\_cfht.  validation\_data\_decam, validation\_data\_hsc,
+/datasets/auxTel, /datasets/comCam, /datasets/ctio0m9, /datasets/lsstCam,
+/datasets/decam /datasets/des\_sn, /datasets/hsc, /datasets/refcats,
+/datasets/sdss, /datasets/gapon}
+Product owners are responsible for ensuring that the content and
+use cases of the datasets are well described and compatible with
+recent stack versions.  The owner of a dataset can typically be the
+team with immediate use cases and knowledge of its camera package.
 
 The Obs Pkg WG (\jira{RFC-393}) is charged to re-design and refactor
 the obs packages for maintainability and extensibility. We suggest
@@ -199,14 +209,15 @@ cameras when possible.  After the refactoring, the obs packages
 shall rarely change so the dataset format will be more stable.  The
 QAWG recommends prioritise the Obs Pkg WG.
 
-In some cases, a dataset pacakge may contain additional data not
-in the format of a Butler repository. We recommend following the
+In some cases, a dataset pacakge may contain additional data that are not
+tenable in the format of a Butler repository. We recommend following the
 format as described in DM Developer Guide Common Dataset Organization
 and Policy \footnote{\url{https://developer.lsst.io/services/datasets.html}}
 and update the policy as needed.
 
 As for the storage of test datasets, we consider any test dataset
 package being either small or large, based on its size and use cases.
+The QAWG's recommendations are as follows.
 
 \begin{itemize}
   \item \textbf{Storage of small datasets}
@@ -226,9 +237,9 @@ package being either small or large, based on its size and use cases.
 
   \begin{itemize}
     \item{packaged as EUPS products;}
-    \item{stored as Git LFS repositories as needed;}
-    \item{tagged their versions with the software releases;}
     \item{made publicly available on GitHub;}
+    \item{stored as Git LFS repositories as needed;}
+    \item{tagged their versions with the DM software releases;}
     \item{documented clearly its use cases and named product owner for each dataset;}
   \end{itemize}
 
@@ -241,9 +252,9 @@ package being either small or large, based on its size and use cases.
   volume is important.  We recommend them
 
   \begin{itemize}
-    \item{made available on LSST Development Machines (currently on GPFS);}
+    \item{made available on LSST development machines (currently on GPFS);}
+    \item{usable and shared by team members;}
     \item{protected under a disaster recovery policy;}
-    \item{shared by team members;}
     \item{documented clearly its use cases and named product owner for each dataset;}
   \end{itemize}
 
@@ -264,22 +275,22 @@ in validate\_drp.  Both ci\_hsc and validate\_drp are run in
 Jenkins and triggered by timers every night (\S\ref{sec:comp:ci}).
 
 It's QAWG's understanding that the validate\_drp scripts will
-eventually replace ci\_hsc, and a set of test scripts will be run
-in a meta-package named lsst\_ci.  However, at the time of writing,
-the validate\_drp scripts test only the single frame processing
-step, while ci\_hsc exercises almost the entire end-to-end DRP
-pipelines.  There has not been sufficient resources in implementing
+eventually replace ci\_hsc and ci\_ctio0m9, and a set of test scripts
+will be run in a meta-package named lsst\_ci.  However, at the time
+of writing, the validate\_drp scripts test only the single frame
+processing step, while ci\_hsc exercises almost the entire end-to-end
+DRP pipelines.  There has not been sufficient resources in implementing
 further processing in validate\_drp.  Similarly, the lsst\_dm\_stack\_demo
 repository should be converted into an EUPS product and a test
 script added to lsst\_ci for execution (\jira{DM-14806}).
 
-QAWG recommend priority to unify the CI test package design and
-finish the transitioning to validate\_drp. If such effort cannot
+The QAWG recommends priority to unify the CI test package design and
+finish the transition to validate\_drp. If such effort cannot
 be allocated, documentations should be added to clearly describe
-the status quo and recommendations for developers during the
+the status quo, and recommendations for developers during the
 transition should be added to the Developer Guide (similar to
 \S\ref{sec:comp:doc} and \S\ref{sec:comp:ci}). Before validate\_drp
-can replace ci\_hsc, ci\_hsc should be maintained.
+can replace ci\_hsc and ci\_ctio0m9, the packages should be maintained.
 
 
 Should address the union of lsst\_dm\_stack\_demo, ci\_hsc, validate\_drp use
