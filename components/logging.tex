@@ -1,0 +1,21 @@
+\subsection{Logging}
+
+\assign{Simon}
+
+Logging is an important aspect of running large data processing.
+It is also integral to quality assessment as the logging information provides important contextual information when inspecting data for quality issues.
+Specifically, log messages presenting information about the processing: e.g. PSF width, number of stars used in a model fit, can indicate problems with the algorithmic behavior or input data.
+Logging also provides information about potential causes for unexpected termination including exit codes and exeptions.
+
+While logs can be straightforward to parse when only a small number of concurrent processes are being used, they quickly become harder to understand as the number of processes increases.
+
+The logging component has the following attributes:
+\begin{itemize}
+\item Configurable for logging granularity. For example, \texttt{INFO}, \texttt{WARN}, \texttt{ERROR}.
+\item Trivial to retrieve time ordered logs for a thread.
+\item Possible to retrieve logs, exit status, or exceptions for threads ending in an unexpected state.
+\item Possible to retrieve enough information to rerun the data units that were unprocessed because of processes ending in unexpected state.  KSK: perhaps this is solved by the provenance system.
+\item Searchable per process for regexp and timestamp.
+\end{itemize}
+
+Derived from \S\ref{sec:design:debug}.

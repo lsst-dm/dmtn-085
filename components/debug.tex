@@ -1,0 +1,19 @@
+\subsection{Updated pipeline debugging system}
+
+\assign{Simon}
+
+The debugging system must be both reasonably powerful and easy to use.
+It should also be obvious from help/doc strings how to turn on debugging.
+There is a tradeoff between granularity and usability.
+
+The recommendation is that the debugging system be simplified to be configurable at the task level.
+Debugging is turned on via a config parameter.
+This allows for single sub-tasks to turn on debugging independently.
+In practice this means that statements like \texttt{if lsstDebug:} would turn into \texttt{if self.config.debug}.
+
+This brings up the obvious issue that free functions/non-task methods called in the \texttt{run} method of a task do not necessarily have the debugging flag passed into them.
+It becomes the responsibility of the implementer to pass \texttt{self.config.debug} into methods that have debug functionality.
+
+Derived from \S\ref{sec:design:debug}.
+
+i.e. redesigned \texttt{lsstDebug}.

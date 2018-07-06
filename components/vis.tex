@@ -1,0 +1,27 @@
+\subsection{Guidance on visualization}
+
+\assign{Simon}
+We decided that this section should first be seeded with contexts for visualization. We can then go through and give specific guidance.
+
+Contexts:
+\begin{itemize}
+\item Notebooks in-line: matplotlib-ish
+\item Dashboard like visualization: health status (grafana?)
+\item Pipelines debugging visualization: both persisted PNGs and pop up vis
+\item Purpose built QA visualization: Like the multisky plot from \texttt{qa\_explorer}
+\item Exploratory: Single plots with interactivity, including zoom and pan
+\item Linked plots: Interaction in one frame causes chnge of state in another plot
+\item Image visualization: (covered elsewhere)
+\item Publication plotting
+\item Static plots for reports
+\item Plotting from a non-notebook interactive setting
+\item Rendering of cached time series: SQuaSH
+\end{itemize}
+
+Derived from \S\ref{sec:design:vis}.
+
+We're requesting a set of guidelines for developers here, not a new framework
+--- but that's still a concrete deliverable (it's just documentation, rather
+than code). We might suggest that these guidelines be developed by a new WG,
+per Simon's
+suggestion\footnote{\url{https://confluence.lsstcorp.org/display/DM/Pipeline+Debugging+Design}}.
