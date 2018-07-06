@@ -4,6 +4,18 @@
 
 \assign{Simon}
 
+The debugging system must be both reasonably powerful and easy to use.
+It should also be obvious from help/doc strings how to turn on debugging.
+There is a tradeoff between granularity and usability.
+
+The recommendation is that the debugging system be simplified to be configurable at the task level.
+Debugging is turned on via a config parameter.
+This allows for single sub-tasks to turn on debugging independently.
+In practice this means that statements like \texttt{if lsstDebug:} would turn into \texttt{if self.config.debug}.
+
+This brings up the obvious issue that free functions/non-task methods called in the \texttt{run} method of a task do not necessarily have the debugging flag passed into them.
+It becomes the responsibility of the implementer to pass \texttt{self.config.debug} into methods that have debug functionality.
+
 Derived from \S\ref{sec:design:debug}.
 
 i.e. redesigned \texttt{lsstDebug}.
@@ -12,19 +24,55 @@ i.e. redesigned \texttt{lsstDebug}.
 
 \assign{Simon}
 
+Logging is an important aspect of running large data processing.
+It is also integral to quality assessment as the logging information provides important contextual information when inspecting data for quality issues.
+Specifically, log messages presenting information about the processing: e.g. PSF width, number of stars used in a model fit, can indicate problems with the algorithmic behavior or input data.
+Logging also provides information about potential causes for unexpected termination including exit codes and exeptions.
+
+While logs can be straightforward to parse when only a small number of concurrent processes are being used, they quickly become harder to understand as the number of processes increases.
+
+The logging component has the following attributes:
+\begin{itemize}
+\item Configurable for logging granularity. For example, \texttt{INFO}, \texttt{WARN}, \texttt{ERROR}.
+\item Trivial to retrieve time ordered logs for a thread.
+\item Possible to retrieve logs, exit status, or exceptions for threads ending in an unexpected state.
+\item Possible to retrieve enough information to rerun the data units that were unprocessed because of processes ending in unexpected state.  KSK: perhaps this is solved by the provenance system.
+\item Searchable per process for regexp and timestamp.
+\end{itemize}
+
 Derived from \S\ref{sec:design:debug}.
 
 \subsection{Capability for developers to run pipelines at scale}
 
-\assign{Lauren}
+\assign{Simon}
 
-Derived from \S\ref{sec:design:debug}.
+I believe we aggreed that if the logging system and provenance system are sufficient to meet recommendations, this aspect is essentially a solved problem.
+
+I do think that it also depends on the orchestration layer, but I don't think that can be in the scope of this group.
+
+Derived from \S\ref{sec:design:logging}.
 
 \subsection{Guidance on visualization}
 
-\assign{Lauren}
+\assign{Simon}
+We decided that this section should first be seeded with contexts for visualization. We can then go through and give specific guidance.
 
-Derived from \S\ref{sec:design:debug}.
+Contexts:
+\begin{itemize}
+\item Notebooks in-line: matplotlib-ish
+\item Dashboard like visualization: health status (grafana?)
+\item Pipelines debugging visualization: both persisted PNGs and pop up vis
+\item Purpose built QA visualization: Like the multisky plot from \texttt{qa\_explorer}
+\item Exploratory: Single plots with interactivity, including zoom and pan
+\item Linked plots: Interaction in one frame causes chnge of state in another plot
+\item Image visualization: (covered elsewhere)
+\item Publication plotting
+\item Static plots for reports
+\item Plotting from a non-notebook interactive setting
+\item Rendering of cached time series: SQuaSH
+\end{itemize}
+
+Derived from \S\ref{sec:design:vis}.
 
 We're requesting a set of guidelines for developers here, not a new framework
 --- but that's still a concrete deliverable (it's just documentation, rather
