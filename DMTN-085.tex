@@ -55,6 +55,31 @@ Abstract.
 This report constitutes the primary artefact produced by the DM \gls{qawg},
 addressing its charge as defined in \citeds{LDM-622}.
 
+The complete scope of ``\gls{qa} within \gls{dm}'' is too large to be
+coherently addressed by any group on a limited timescale. Per its charge,
+then, the \gls{qawg} has constrained itself to considering only those aspects
+of \gls{qa} which are most directly relevant to the construction of the LSST
+Science Pipelines. In particular, we have considered the tools which
+developers need to construct and debug individual algorithms; tools which can
+be used to investigate the execution of at-scale pipeline runs; and tools
+which can be used to demonstrate that the overall system meets its
+requirements (to ``verify'' the system). This deliberately excludes broader
+requirements of Commissioning, Science Validation, or run-time
+\gls{sdqa}\footnote{Effectively, code executed during prompt or data release
+production processing to demonstrate that the data being both ingested and
+released is of adequate quality.}.
+
+This report consists broadly of three parts. In \S\ref{sec:approach}, we
+describe the approach that the \gls{qawg} took to addressing its charge. In
+\S\ref{sec:design}, we present a high-level overview of the systems that we
+envisage the future DM comprising. Finally, In \S\ref{sec:comp} we identify
+specific components --- which may be pieces of software, documentation,
+procedures, or other artifacts --- that should be developed to enable the
+capabilities we regard as necessary. In some cases, these components may be
+entirely new developments; in others, existing tools developed by the \gls{dm}
+subsystem may already be fit for purpose, or can be adapted with some effort.
+We have noted when this is the case.
+
 \input{approach/approach.tex}
 \input{design/design.tex}
 \input{components/components.tex}
