@@ -6,6 +6,37 @@
 
 \assign{John}
 
+The group considering the requirements of Science Pipelines developers for
+debugging explored a number of avenues to make developers lives easier. In
+doing, so they identified a number of areas in which current systems could be
+improved to boost both productivity and developer morale.
+
+In particular, they considered three separate scenarios in which developers
+will require support.
+
+\subsubsection{A pipeline is segfaulting}
+
+We considered the following:
+
+\begin{itemize}
+
+\item{A pipeline is failing with a segfault;}
+\item{A developer recompiles the failing code with no optimization;}
+\item{The unoptimized code is run through a memory analysis tool\footnote{e.g. \href{http://valgrind.org}{Valgind}.};}
+\item{This gives some possible locations where arrays are being overrun;}
+\item{The unoptimized code is run under \href{https://www.gnu.org/software/gdb/}{GDB};}
+\item{This includes the need to start in \href{https://docs.python.org/3/library/pdb.html}{PDB} and attach GDB when the process enters the compiled C++ code;}
+\item{Using the debugging utilities, the dev finds where the array is being overrun.}
+
+\end{itemize}
+
+
+\subsubsection{A pipeline is throwing an exception}
+
+\subsubsection{A \gls{ci} run shows a regression in a \gls{metric value}}
+
+
+
 \subsection{Drill down}
 \label{sec:design:drill}
 

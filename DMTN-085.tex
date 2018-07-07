@@ -80,13 +80,18 @@ entirely new developments; in others, existing tools developed by the \gls{dm}
 subsystem may already be fit for purpose, or can be adapted with some effort.
 We have noted when this is the case.
 
+Finall,y in Appendix \ref{glo:main} we define a number of key terms which are
+used throughout this report and which we we suggest be adopted throughout
+\gls{dm} to provide an unambigous vocabulary for referring to QA topics.
+
 \input{approach/approach.tex}
 \input{design/design.tex}
 \input{components/components.tex}
 
 \appendix
 \glsaddall
-\printglossary[style=index]
+\renewcommand*{\glsautoprefix}{glo:}
+\printglossary[style=index,numberedsection=autolabel]
 
 \bibliography{lsst,lsst-dm,refs_ads,refs,books}
 
