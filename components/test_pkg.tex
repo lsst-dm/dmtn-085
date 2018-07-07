@@ -1,0 +1,33 @@
+\subsection{Standard test package design}
+
+Derived from \S\ref{sec:design:test}.
+
+\assign{Hsin-Fang}
+
+Currently, automatic continuous integration tests are performed via
+multipla packages under two designs: (1) Scons-based execution, including
+ci\_hsc and ci\_ctio0m9, and (2) exeuction through shell scripts
+in validate\_drp.  Both ci\_hsc and validate\_drp are run in
+Jenkins and triggered by timers every night (\S\ref{sec:comp:ci}).
+
+It's QAWG's understanding that the validate\_drp scripts will
+eventually replace ci\_hsc and ci\_ctio0m9, and a set of test scripts
+will be run in a meta-package named lsst\_ci.  However, at the time
+of writing, the validate\_drp scripts test only the single frame
+processing step, while ci\_hsc exercises almost the entire end-to-end
+DRP pipelines.  There has not been sufficient resources in implementing
+further processing in validate\_drp.  Similarly, the lsst\_dm\_stack\_demo
+repository should be converted into an EUPS product and a test
+script added to lsst\_ci for execution (\jira{DM-14806}).
+
+The QAWG recommends priority to unify the CI test package design and
+finish the transition to validate\_drp. If such effort cannot
+be allocated, documentations should be added to clearly describe
+the status quo, and recommendations for developers during the
+transition should be added to the Developer Guide (similar to
+\S\ref{sec:comp:doc} and \S\ref{sec:comp:ci}). Before validate\_drp
+can replace ci\_hsc and ci\_ctio0m9, the packages should be maintained.
+
+
+Should address the union of lsst\_dm\_stack\_demo, ci\_hsc, validate\_drp use
+cases.
