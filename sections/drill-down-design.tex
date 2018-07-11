@@ -1,0 +1,96 @@
+
+\subsection{Drill down} \label{sec:drill-down-design}
+
+\assign{Tim}
+
+Drill-down workflows center on the need to quickly and efficiently identify data processing problems.
+Typically these will be identified from discrepancies identified at higher levels of summary and aggregation.
+We emphasize the importance of ease-of-use for the QA analyst in order to shorten debugging cycles.
+Key capabilities include:
+
+\begin{itemize}
+	\item Rapid retrieval of relevant quantities (metric values, image cutouts, catalog overlays, etc.),
+	\item Readily-(re)configurable interactive plotting tools
+	\item Automated regression testing
+\end{itemize}
+
+The system implementing these capabilities must be able to handle large datasets easily, such as, e.g., an entire HSC public data release.
+
+\subsubsection{Metric computation and persistence} \label{sec:metric_storage}
+
+\begin{recommendation} \label{sec:metric_computation}
+The computation, selection, and aggregation steps that define a metric should be well compartmentalized
+\end{recommendation}
+
+Many metrics are defined as statistical aggregates of a per-source computed quantity over a defined selection of sources.
+In order to enable a low-latency drill-down workflow and analyst flexibility, we recommend that for such metrics, the per-source computations be calculated and stored for \emph{all} sources, and that the selection and aggregation steps be logically seperate.
+This might be implemented, for example, by giving a \texttt{Metric} object separate \texttt{.compute()}, \texttt{.select()} and \texttt{.aggregate()} methods.
+For metrics computed in this way, the maximum storage granularity (\S \ref{sec:metric_storage}) should be considered to be at the source level.
+
+Other metrics may not be well-defined at the source level, such as the slope of the stellar locus in a given color-color space, or other similar metrics that require fitting a model to many sources at once.  
+Such metrics cannot follow this same \texttt{.compute()}--\texttt{.select()}--{.aggregate()} model, and will have a different maximum granularity (e.g., patch, tract, ccd, visit, or dataset).
+This maximum granularity should be explictly defined in the definition of the metric.
+
+\begin{recommendation} \label{sec:metric_storage}
+Metric values should be stored with full granularity (source, CCD, patch, dataset).
+\end{recommendation}
+
+Re-running pipelines to recompute metrics imposes a significant overhead to the analyst.
+We therefore recommend that in general all computed metric values should be stored on disk at the highest relevant granularity.
+In some cases these are per-source (e.g., source FWHM or shape measurements) and may be included in the relevant object catalogs or in postprocessed tables; in others, the minimum granularity may be at the CCD, patch, or even dataset levels (\S \ref{sec:metric_computation}).
+This procedure provides the analyst the ability to filter metric values using arbitrary metadata (night, airmass, focal plane position, moon phase...) and re-aggregate to any level desired with any aggregation function (mean, median, percentiles, standard deviation, outliers...).
+Supplemental storage of higher-level aggregates (e.g., mean FWHM by CCD) is discouraged because of duplication and loss of information, except where speed of visualization of \emph{key} quantities would be impaired due to the need to load large datasets.
+
+
+\begin{recommendation}
+Metric values should be stored as ``tidy data'' in columnar data stores (e.g., Parquet) on disk with the output data repository.
+\end{recommendation}
+
+``Tidy data'' \citep{JSSv059i10} is recommended as a best practice for data analysis workflows, as it simplifies filter-groupby-aggregate workflows.
+
+We expect that most analysts will be primarily interested in all values of a handful of metric columns at once, which suggests a column-store format will be optimal.
+
+The potentially large number of metrics and metric values argues for storage on-disk with the output repository itself.
+This isolation also facilitates ad-hoc processing \& QA workflows by individual analysts.
+We also recommend a centralized system for tracking performance regressions at a high level (\S \ref{sec:regression})).
+
+\begin{recommendation}
+Metric values should have Butler dataIds.
+\end{recommendation}
+
+In order to facilitate joining and filtering metric values by other metadata, metric values should have appropriate Butler dataIds.
+
+\begin{recommendation}
+We should be able to use the Butler interface to persist and retrieve metric values.
+\end{recommendation}
+
+\subsubsection{Drill-down workflows and display} \label{sec:metric_displays}
+
+\begin{recommendation}
+The QA system should supply a configurable, interactive dashboard that runs on any pipeline output repository to quickly diagnose the data processing.
+The dashboard should summarize top-level global metrics and provide a selected set of key visualizations.
+These visualizations will be pipeline-specific.
+\end{recommendation}
+
+\begin{recommendation}
+The dashboard should enable the analyst to start a Jupyter notebook session with the relevant datasets already loaded.
+\end{recommendation}
+
+\begin{recommendation}
+The same interactive dashboard should be able to read the metrics values from the local data repository and from the centralized system for tracking performance regressions.
+\end{recommendation}
+
+
+\subsubsection{Automated regression testing} \label{sec:regression}
+
+
+\begin{recommendation}
+A centralized service should store and plot high-level aggregations of key performance metrics on several datasets that are regularly reprocessed in order to identify performance regressions or improvements due to pipeline changes.
+\end{recommendation}
+
+This is essentially the SQuaSH system.
+The high-level aggregates may be constructed and submitted by an afterburner task that uses the per-repository metric storage.
+
+\begin{recommendation}
+An analyst should be able to start an interactive drill-down session exploring the output repository in question in ``one click'' from any given aggregate displayed by the SQuaSH system.
+\end{recommendation}
