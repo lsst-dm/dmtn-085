@@ -135,7 +135,7 @@ small amount of data and viewing image results locally then DS9 or an equivalent
 to be the best solution, primarily because of the ease of setup.
 
 In the server-based environment of the LSP Notebook Aspect, where services can be more centrally provided,
-the use of Firefly-based image visualization becomes practical and will permit providing more advanced
+the use of Firefly-based image visualization becomes convenient and will permit providing more advanced
 and LSST-customized behavior.
 When the data themselves are already being manipulated on a remote server,
 the use of a co-located visualization server can provide better performance.
@@ -143,10 +143,11 @@ the use of a co-located visualization server can provide better performance.
 Experience so far has shown that different users, at different times, prefer one or the other of the models of having image displays ``next to'' their Python session --- the only approach available with DS9 --- or embedded in a scrolling notebook.
 Which is more useful scientifically or pedagogically often depends on what the immediate purpose is.
 In the latest JupyterLab environment, a third option is available of having image visualization in a separate ``tab'' in the JupyterLab layout.
+Each of these modes is expected to be possible with Firefly; the first (visualization ``next to'' Python) is routine,
+the scrolling widget mode has been demonstrated, and the JupyterLab extension development needed for the third is scheduled.
 
 To be effective for QA applications Firefly should have the following functionality:
 \begin{itemize}
-  \item{Work as a standalone tool;}
   \item{Work as an implementation of the \verb|afw.display| API;}
   \item{Provide a low-level Python API that allows its use with data that may not be in \verb|afw| formats; this API may also allow Firefly to}
   \item{Provide additional / more advanced features than are supported in the \verb|afw.display| base class;\footnote{These might get migrated to inclusion in \verb|afw.display| over time.}}
@@ -155,10 +156,18 @@ To be effective for QA applications Firefly should have the following functional
   \item{Provide a way to overlay tabular data on images;}
   \item{Provide HiPS viewing;}
   \item{Provide visualizations for LSST's image masks, object \verb|Footprints|, and other specialized classes;}
-  \item{Support all major QA use cases and ensure good performance; and}
-  \item{Implement full focal plane visualization.}
+  \item{Support all major QA use cases and ensure good performance;}
+  \item{Implement full focal plane visualization; and}
+  \item{Work as a standalone tool, supporting exploration of generic and LSST-created image files directly from the tool, without the need for a Python driver.}
 \end{itemize}
 
+The SUIT group is working with the other LSP groups to ensure that Firefly services are provided to all LSP instances,
+both the ``planned'' centrally provided instances such as the PDAC and \verb|lsst-lspdev|, and the ``pop-up'' instances
+that are used for supporting workshops and tutorials.
+The group will also continue to provide a service for the legacy Unix-login development environment at NCSA.
+In addition, the group plans to provide Docker-based deployment images for different user-driven installation scenarios,
+ranging from a laptop-based Firefly server that provides single-user visualization support without the need for large memory or computational requirements,
+to a central-site-oriented server that provides high performance by taking advantage of a large number of cores and substantial memory.
 
 
 \subsection{Catalog visualization tools}
