@@ -29,7 +29,7 @@ Other metrics may not be well-defined at the source level, such as the slope of 
 Such metrics cannot follow this same \texttt{.compute()}--\texttt{.select()}--\texttt{.aggregate()} model, and will have a different maximum granularity (e.g., patch, tract, ccd, visit, or dataset).
 This maximum granularity should be explictly defined in the definition of the metric.
 
-\begin{recommendation} \label{sec:metric_storage}
+\begin{recommendation}
 Metric values should be stored with full granularity (source, CCD, patch, dataset).
 \end{recommendation}
 
