@@ -129,30 +129,36 @@ suggestion\footnote{\url{https://confluence.lsstcorp.org/display/DM/Pipeline+Deb
 
 \assign{Trey}
 
-There are two approaches to doing image visualization.  When a developer is working on a laptop with a
-small amount of data and viewing image results locally then DS9 or an equivilent desktop application seems
-to be the best solution.
+There are two approaches to doing image visualization.
+When a developer is working on a laptop with a
+small amount of data and viewing image results locally then DS9 or an equivalent desktop application seems
+to be the best solution, primarily because of the ease of setup.
 
-In the case where the data is on some remote server then visualization needs to
-be more advanced. Here we recommend using Firefly web based image visulization. A large Firefly server(s) near the
-data will allow quicker and simpler visualization. The data is not required to be moved to the laptop to visualize.
+In the server-based environment of the LSP Notebook Aspect, where services can be more centrally provided,
+the use of Firefly-based image visualization becomes practical and will permit providing more advanced
+and LSST-customized behavior.
+When the data themselves are already being manipulated on a remote server,
+the use of a co-located visualization server can provide better performance.
 
-To be effective for QA Firefly should have the following functionallity:
+Experience so far has shown that different users, at different times, prefer one or the other of the models of having image displays ``next to'' their Python session --- the only approach available with DS9 --- or embedded in a scrolling notebook.
+Which is more useful scientifically or pedagogically often depends on what the immediate purpose is.
+In the latest JupyterLab environment, a third option is available of having image visualization in a separate ``tab'' in the JupyterLab layout.
+
+To be effective for QA applications Firefly should have the following functionality:
 \begin{itemize}
-  \item{Work as a standalone tool. }
-  \item{Work with the afw.display API.}
-  \item{Provide an API that allows a user to acess more advanced features than afw.display provides.
-  Possibly afw.display API should be enhanced in certain cases.}
-  \item{Work as an extension in Jupyter Lab. For example- click on a FITS file and see it show in Firefly.}
-  \item{Work as a Jupyter Lab widget.}
-  \item{Provide a way to show tabular data on images.}
-  \item{Provide HiPS viewing.}
-  \item{Work with all major QA use cases and ensure good performance.}
+  \item{Work as a standalone tool;}
+  \item{Work as an implementation of the \verb|afw.display| API;}
+  \item{Provide a low-level Python API that allows its use with data that may not be in \verb|afw| formats; this API may also allow Firefly to}
+  \item{Provide additional / more advanced features than are supported in the \verb|afw.display| base class;\footnote{These might get migrated to inclusion in \verb|afw.display| over time.}}
+  \item{Work as an extension in Jupyter Lab (or example: click on a FITS file and see it show in Firefly);}
+  \item{Work as a Jupyter Notebook widget, supporting JupyterLab's ``tear-off'' feature to move it to a tab;}
+  \item{Provide a way to overlay tabular data on images;}
+  \item{Provide HiPS viewing;}
+  \item{Provide visualizations for LSST's image masks, object \verb|Footprints|, and other specialized classes;}
+  \item{Support all major QA use cases and ensure good performance; and}
   \item{Implement full focal plane visualization.}
-  \item
 \end{itemize}
 
-What else do we want here?
 
 
 \subsection{Catalog visualization tools}
