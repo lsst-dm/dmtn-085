@@ -1,0 +1,134 @@
+
+%\subsection{Drill down and interactive dashboards} \label{sec:drill-down-design}
+
+Drill-down workflows center on the need to quickly and efficiently identify data processing problems.
+Typically these will be identified from discrepancies identified at higher levels of summary and aggregation.
+We emphasize the importance of ease-of-use for the QA analyst in order to shorten debugging cycles.
+Key capabilities include:
+
+\begin{itemize}
+	\item Rapid retrieval of relevant quantities (metric values, image cutouts, catalog overlays, etc.),
+	\item Readily-(re)configurable interactive plotting tools supporting a developer-oriented browser-based dashboard,
+	\item Automated regression testing.
+\end{itemize}
+
+The system implementing these capabilities must be able to handle large datasets easily, such as, e.g., an entire HSC public data release.
+
+\subsubsection{Metric computation and persistence} \label{sec:metric_storage}
+
+\begin{recommendation} \label{sec:metric_computation}
+The computation, selection, and aggregation steps that define a metric should be well compartmentalized.
+\end{recommendation}
+
+Many metrics are defined as statistical aggregates of a per-source computed quantity over a defined selection of sources.
+In order to enable a low-latency drill-down workflow and analyst flexibility, we recommend that for such metrics, the per-source computations be calculated and stored for \emph{all} sources, and that the selection and aggregation steps be logically seperate.
+This might be implemented, for example, by giving a \texttt{Metric} object separate \texttt{.compute()}, \texttt{.select()} and \texttt{.aggregate()} methods.
+For metrics computed in this way, the maximum storage granularity (\S \ref{sec:metric_storage}) should be considered to be at the source level.
+
+Other metrics may not be well-defined at the source level, such as the slope of the stellar locus in a given color-color space, or other similar metrics that require fitting a model to many sources at once.
+Such metrics cannot follow this same \texttt{.compute()}--\texttt{.select()}--\texttt{.aggregate()} model, and will have a different maximum granularity (e.g., patch, tract, ccd, visit, or dataset).
+This maximum granularity should be explictly defined in the definition of the metric.
+
+\begin{recommendation}
+Metric values should be stored with full granularity (source, CCD, patch, dataset).
+\end{recommendation}
+
+Re-running pipelines to recompute metrics imposes a significant overhead to the analyst.
+We therefore recommend that in general all computed metric values should be stored on disk at the highest relevant granularity.
+In some cases these are per-source (e.g., source FWHM or shape measurements) and may be included in the relevant object catalogs or in postprocessed tables; in others, the minimum granularity may be at the CCD, patch, or even dataset levels (\S \ref{sec:metric_computation}).
+This procedure provides the analyst the ability to filter metric values using arbitrary metadata (night, airmass, focal plane position, moon phase...) and re-aggregate to any level desired with any aggregation function (mean, median, percentiles, standard deviation, outliers...).
+Supplemental storage of higher-level aggregates (e.g., mean FWHM by CCD) is discouraged because of duplication and loss of information, except where speed of visualization of \emph{key} quantities would be impaired due to the need to load large datasets.
+
+
+\begin{recommendation}
+Metric values should be stored as ``tidy data'' in columnar data stores (e.g., Parquet) on disk with the output data repository, in such a way that the data can be loaded quickly enough for interactive work on $\sim$100s of tracts.
+\end{recommendation}
+
+``Tidy data'' \citep{JSSv059i10} is recommended as a best practice for data analysis workflows, as it simplifies filter-groupby-aggregate workflows.
+
+We expect that most analysts will be primarily interested in all values of a handful of metric columns at once, which suggests a column-store format will be optimal.
+The potentially large number of metrics and metric values argues for storage on-disk with the output repository itself.
+This isolation also facilitates ad-hoc processing \& QA workflows by individual analysts.
+We also recommend a centralized system for tracking performance regressions at a high level (\S \ref{sec:regression}).
+
+Additionally, we also note that in order for interactive tools to be useful for visualizing results of large data repositories, the persistence model must allow for loading and aggregating metric values at the scale of 10s to 100s of tracts with low latency.
+For example, if parquet files are used to store tables of metric values, it would be preferable for such tables to be stored at the per-tract level instead of the per-patch level, to minimize lots of I/O of small files when loading multiple tracts of data at once.
+
+
+\begin{recommendation}
+Metric values should have Butler dataIds.
+\end{recommendation}
+
+In order to facilitate joining and filtering metric values by other metadata, metric values should have appropriate Butler dataIds.
+
+\begin{recommendation}
+We should be able to use the Butler interface to persist and retrieve metric values.
+\end{recommendation}
+
+\subsubsection{Drill-down workflows and display} \label{sec:metric_displays}
+
+Currently, pipeline developers rely on a variety of ad-hoc visualization tools and custom workflows to debug processing problems and investigate the effects of new algorithms.
+The QAWG recommends development of a browser-based dashboard QA system that is designed to cater to the workflow of the debugging developer, and is informed and guided by current usage of existing tools (e.g. \texttt{pipe\char`_analysis} and \texttt{qa\char`_explorer}).
+This is separate from, and in addition to, the SQuaSH dashboard (\S \ref{sec:components:squash}).
+
+\begin{recommendation}
+The QA system should supply a browser-based interactive dashboard that can run on any pipeline output repository (or comparison of two repositories) to quickly diagnose the quality of the data processing.
+This dashboard should have two levels of detail: a high-level dashboard summarizing top-level global metrics, and and a metric dashboard showing more information on a selected metric (or set of metrics).  The more detailed metric dashboard should be able to explore both coadds and inidivual visits.
+\end{recommendation}
+
+A developer should be able to navigate a web browser to a URL, enter the path to a data repository at the LDF on which a metric-computing postprocessing task has been run (e.g., on-disk at NCSA in \texttt{\textbackslash scratch} or \texttt{\textbackslash project}), and see an dashboard summarizing the data processing.
+In addition to computing and persisting the values of these metrics, this task also will have persisted enough information about the metric computations such that the dashboard can read the following from the repository:
+\begin{itemize}
+    \item Which metrics were computed?
+    \item What selection was done on the source catalog to compute each metric?
+    \item What is an acceptable value for each metric for this particular data set?
+\end{itemize}
+The developer should have a choice to explore either the metrics in a single repository, or the differences in metrics between two data repositories by entring a ``comparison repository'' in addition to the primary one (that necessarily would need to have the same metrics computed as the primary).
+
+The high-level landing page of this dashboard should allow for at-a-glance summary of the data and identification of any problems.
+The overall data summary could be in a header displaying the some numbers of interest, such as number of tracts, numbers of visits per filter, total numbers of sources, etc.
+At-a-glance identification of problems could be accomplished by displaying fully-rolled-up metric summary values in a minimalistic but informative format, such as an array of color-coded buttons or a color-coded table (e.g., green for good, red for bad).
+This top-level dashboard page should also have minimal but useful visualizations, such as an RA/dec plot of a single metric value (perhaps switchable via drop-down menu).
+
+Clicking on any metric from the top-level page should load up a coadd metric-detail dashboard, which should allow for more detailed exploration of an individual metric.
+The layout and function of this page will depend on the type of metric.
+As an example, for metrics derived directly from individual source measurements, it might display a scatter plot of the metric values vs. source magnitude, as well as an RA/Dec scatter plot colormapped by metric value.
+This could by default show the data for all tracts, but tract-aggregated information could be available for each tract on hovering over the sky map.
+Upon clicking upon a specific tract, then only the points for that tract will be selected (both in sky plot and scatter plot), and then the sky plot would then display patch-summarized data.
+Similarly, from here, clicking on a patch would load up just the data in that patch.
+
+This metric dashboard should also allow simulataneous visualization of different metrics, to allow cross-filtering.
+This might be accomplished, for example, by having a sidebar listing the metrics, and being able to use it to either switch between metrics or to select multiple metrics.
+
+There should be an analogous drill-down mode for exploring visit-level data, with the drill-down levels being visit->ccd rather than tract->patch.
+There should be seamless integration between coadd and visit mode, to match the typical workflow of a debugging developer, who will first see that there is a problem with a particular metric in a particular tract at the coadd processing level, and then will want to see what visits went into that coadd tract.
+To enable this, from the ``coadd mode'' metric dashboard, there could be a way to toggle on/off visit outlines, and to jump to ``visit mode'' for a selected visit.
+In ``visit mode,'' in addition to the scatter/sky plots that ``coadd mode'' has, there could be an additional figure showing the aggregated metric value as a function of visit number, where outlier visits would be clearly visible.
+This system would enable a developer to quickly identify bad visits for a particular metric, in just a few clicks.
+
+
+\begin{recommendation}
+The dashboard should enable the analyst to start a Jupyter notebook session with the relevant datasets already loaded.
+\end{recommendation}
+
+From the metric dashboard, there could be an ``explore in Jupyter'' button that would load up the dataset in the Jupyterlab environment, which would provide all the tools to make the dashboard visualizations, with the additional flexibility for ad-hoc exploration that the notebook provides.
+
+
+\subsubsection{Automated regression testing} \label{sec:regression}
+
+
+\begin{recommendation}
+In addition to the repository-level dashboard QA system heretofore discussed, a centralized service should store and plot high-level aggregations of key performance metrics on several datasets that are regularly reprocessed in order to identify performance regressions or improvements due to pipeline changes.
+\end{recommendation}
+
+
+This is essentially the SQuaSH system, discussed in more detail in \ref{sec:components:squash}.
+The high-level aggregates that SQuaSH uses may be constructed and submitted by an afterburner task that uses the per-repository metric storage.
+
+\begin{recommendation}
+An analyst should be able to start an interactive drill-down session exploring the output repository in question in ``one click'' from any given aggregate displayed by the SQuaSH system.
+\end{recommendation}
+
+This defines the relationship between the QA dashboard and SQuaSH.
+The QA dashboard can point to any data repository on disk in which metrics have been calculated, and does not have to relate to the centralized SQuaSH system in any way.
+But a developer must be able to access this dashboard in two equivalent ways: either by navigating straight to the dashboard URL and entering the path to a repository, or by beginning at the SQuaSH dashboard, and clicking on a point representing a given pipeline run.
