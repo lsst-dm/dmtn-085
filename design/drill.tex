@@ -18,7 +18,7 @@ The system implementing these capabilities must be able to handle large datasets
 
 \begin{recommendation}
     {rec:metric_computation}
-    {The computation, selection, and aggregation steps that define a metric should be well compartmentalized.}
+    {The computation, selection, and aggregation steps that define a metric should be well compartmentalized}
 \end{recommendation}
 
 Many metrics are defined as statistical aggregates of a per-source computed quantity over a defined selection of sources.
@@ -32,7 +32,7 @@ This maximum granularity should be explictly defined in the definition of the me
 
 \begin{recommendation}
     {rec:metric_values}
-    {Metric values should be stored with full granularity (source, CCD, patch, dataset).}
+    {Metric values should be stored with full granularity (source, CCD, patch, dataset)}
 \end{recommendation}
 
 Re-running pipelines to recompute metrics imposes a significant overhead to the analyst.
@@ -61,14 +61,14 @@ For example, if parquet files are used to store tables of metric values, it woul
 
 \begin{recommendation}
     {rec:metric_dataId}
-    {Metric values should have Butler dataIds.}
+    {Metric values should have Butler dataIds}
 \end{recommendation}
 
 In order to facilitate joining and filtering metric values by other metadata, metric values should have appropriate Butler dataIds.
 
 \begin{recommendation}
     {rec:metric_butler}
-    {It should be possible to use the Butler to persist and retrieve metric values.}
+    {It should be possible to use the Butler to persist and retrieve metric values}
 \end{recommendation}
 
 \subsubsection{Drill-down workflows and display} \label{sec:metric_displays}
@@ -79,7 +79,7 @@ This is separate from, and in addition to, the SQuaSH dashboard (\S \ref{sec:com
 
 \begin{recommendation}
     {rec:dashboard}
-    {The QA system should supply a browser-based interactive dashboard that can run on any pipeline output repository (or comparison of two repositories) to quickly diagnose the quality of the data processing.}
+    {The QA system should supply a browser-based interactive dashboard that can run on any pipeline output repository (or comparison of two repositories) to quickly diagnose the quality of the data processing}
 This dashboard should have two levels of detail: a high-level dashboard summarizing top-level global metrics, and and a metric dashboard showing more information on a selected metric (or set of metrics).  The more detailed metric dashboard should be able to explore both coadds and inidivual visits.
 \end{recommendation}
 

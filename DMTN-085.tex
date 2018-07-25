@@ -45,6 +45,18 @@ Abstract.
   \end{enumerate}%
 }
 \newcommand{\l@rec}[2]{#1}
+\newenvironment{recbox}
+{
+  \begin{center}
+  \begin{minipage}[h]{.85\linewidth}
+    \begin{tcolorbox}[colback=green!5!white,colframe=green!75!black,title=Recommendation]
+}
+{
+    \end{tcolorbox}
+  \end{minipage}
+  \end{center}
+}
+
 \makeatother
 
 % Write recommendations so they looks something like this:
@@ -58,7 +70,9 @@ Abstract.
   \addcontentsline{rec}{rec}{%
     \noexpand\unexpanded{\unexpanded\expandafter{\item{#2 (\S\ref{#1})}}}%
   }%
-  \begin{admonition}{green!5!white}{green!75!black}{Recommendation}{}\emph{#2.} \BODY \end{admonition}%
+  \begin{recbox}
+  \emph{#2.} \par \BODY%
+  \end{recbox}
  }%
 
 
