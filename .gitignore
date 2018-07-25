@@ -8,6 +8,7 @@ DMTN-*.ist
 DMTN-*.log
 DMTN-*.out
 DMTN-*.pdf
+DMTN-*.rec
 DMTN-*.toc
 meta.tex
 *.swp

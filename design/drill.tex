@@ -16,8 +16,9 @@ The system implementing these capabilities must be able to handle large datasets
 
 \subsubsection{Metric computation and persistence} \label{sec:metric_storage}
 
-\begin{recommendation} \label{sec:metric_computation}
-The computation, selection, and aggregation steps that define a metric should be well compartmentalized.
+\begin{recommendation}
+    {rec:metric_computation}
+    {The computation, selection, and aggregation steps that define a metric should be well compartmentalized.}
 \end{recommendation}
 
 Many metrics are defined as statistical aggregates of a per-source computed quantity over a defined selection of sources.
@@ -30,18 +31,21 @@ Such metrics cannot follow this same \texttt{.compute()}--\texttt{.select()}--\t
 This maximum granularity should be explictly defined in the definition of the metric.
 
 \begin{recommendation}
-Metric values should be stored with full granularity (source, CCD, patch, dataset).
+    {rec:metric_values}
+    {Metric values should be stored with full granularity (source, CCD, patch, dataset).}
 \end{recommendation}
 
 Re-running pipelines to recompute metrics imposes a significant overhead to the analyst.
 We therefore recommend that in general all computed metric values should be stored on disk at the highest relevant granularity.
-In some cases these are per-source (e.g., source FWHM or shape measurements) and may be included in the relevant object catalogs or in postprocessed tables; in others, the minimum granularity may be at the CCD, patch, or even dataset levels (\S \ref{sec:metric_computation}).
+In some cases these are per-source (e.g., source FWHM or shape measurements) and may be included in the relevant object catalogs or in postprocessed tables; in others, the minimum granularity may be at the CCD, patch, or even dataset levels (\S \ref{rec:metric_computation}).
 This procedure provides the analyst the ability to filter metric values using arbitrary metadata (night, airmass, focal plane position, moon phase...) and re-aggregate to any level desired with any aggregation function (mean, median, percentiles, standard deviation, outliers...).
 Supplemental storage of higher-level aggregates (e.g., mean FWHM by CCD) is discouraged because of duplication and loss of information, except where speed of visualization of \emph{key} quantities would be impaired due to the need to load large datasets.
 
 
 \begin{recommendation}
-Metric values should be stored as ``tidy data'' in columnar data stores (e.g., Parquet) on disk with the output data repository, in such a way that the data can be loaded quickly enough for interactive work on $\sim$100s of tracts.
+    {rec:metric_tidy}
+    {Metric values should be stored as ``tidy data'' in columnar data stores (e.g., Parquet) as part an output data repository}
+In particular, this should make it possible to load the data quickly enough for interactive work on $\sim$100s of tracts.
 \end{recommendation}
 
 ``Tidy data'' \citep{JSSv059i10} is recommended as a best practice for data analysis workflows, as it simplifies filter-groupby-aggregate workflows.
@@ -56,13 +60,15 @@ For example, if parquet files are used to store tables of metric values, it woul
 
 
 \begin{recommendation}
-Metric values should have Butler dataIds.
+    {rec:metric_dataId}
+    {Metric values should have Butler dataIds.}
 \end{recommendation}
 
 In order to facilitate joining and filtering metric values by other metadata, metric values should have appropriate Butler dataIds.
 
 \begin{recommendation}
-We should be able to use the Butler interface to persist and retrieve metric values.
+    {rec:metric_butler}
+    {It should be possible to use the Butler to persist and retrieve metric values.}
 \end{recommendation}
 
 \subsubsection{Drill-down workflows and display} \label{sec:metric_displays}
@@ -72,7 +78,8 @@ The QAWG recommends development of a browser-based dashboard QA system that is d
 This is separate from, and in addition to, the SQuaSH dashboard (\S \ref{sec:components:squash}).
 
 \begin{recommendation}
-The QA system should supply a browser-based interactive dashboard that can run on any pipeline output repository (or comparison of two repositories) to quickly diagnose the quality of the data processing.
+    {rec:dashboard}
+    {The QA system should supply a browser-based interactive dashboard that can run on any pipeline output repository (or comparison of two repositories) to quickly diagnose the quality of the data processing.}
 This dashboard should have two levels of detail: a high-level dashboard summarizing top-level global metrics, and and a metric dashboard showing more information on a selected metric (or set of metrics).  The more detailed metric dashboard should be able to explore both coadds and inidivual visits.
 \end{recommendation}
 
@@ -108,7 +115,8 @@ This system would enable a developer to quickly identify bad visits for a partic
 
 
 \begin{recommendation}
-The dashboard should enable the analyst to start a Jupyter notebook session with the relevant datasets already loaded.
+    {rec:dashboard:jupyter}
+    {The dashboard should enable the analyst to start a Jupyter notebook session with the relevant datasets already loaded}
 \end{recommendation}
 
 From the metric dashboard, there could be an ``explore in Jupyter'' button that would load up the dataset in the Jupyterlab environment, which would provide all the tools to make the dashboard visualizations, with the additional flexibility for ad-hoc exploration that the notebook provides.
@@ -118,7 +126,8 @@ From the metric dashboard, there could be an ``explore in Jupyter'' button that 
 
 
 \begin{recommendation}
-In addition to the repository-level dashboard QA system heretofore discussed, a centralized service should store and plot high-level aggregations of key performance metrics on several datasets that are regularly reprocessed in order to identify performance regressions or improvements due to pipeline changes.
+    {rec:metric:aggregationservice}
+    {A centralized service should store and plot high-level aggregations of key performance metrics on several datasets that are regularly reprocessed in order to identify performance regressions or improvements due to pipeline changes}
 \end{recommendation}
 
 
@@ -126,7 +135,8 @@ This is essentially the SQuaSH system, discussed in more detail in \ref{sec:comp
 The high-level aggregates that SQuaSH uses may be constructed and submitted by an afterburner task that uses the per-repository metric storage.
 
 \begin{recommendation}
-An analyst should be able to start an interactive drill-down session exploring the output repository in question in ``one click'' from any given aggregate displayed by the SQuaSH system.
+    {rec:metric:oneclick}
+    {An analyst should be able to start an interactive drill-down session exploring the output repository in question in ``one click'' from any given aggregate displayed by the SQuaSH system}
 \end{recommendation}
 
 This defines the relationship between the QA dashboard and SQuaSH.

@@ -1,5 +1,8 @@
 \documentclass[DM,authoryear,toc,lsstdraft]{lsstdoc}
 \usepackage[nonumberlist,nogroupskip,toc,numberedsection=autolabel]{glossaries}
+\usepackage{environ}
+\usepackage{enumitem}
+
 \makeglossaries
 \input{glossary}
 
@@ -29,14 +32,35 @@ Abstract.
   \addtohist{\vcsRevision}{\vcsDate}{Unreleased draft.}{Bellm et al.}
 }
 
-% For specific WG recommendations
-\newenvironment{recommendation}[1][]
-{
-  \begin{admonition}{green!5!white}{green!75!black}{Recommendation}{#1}
+% Hyperref plays havoc with my crazy recommendation linking TOCs, so disable it.
+\hypersetup{linktoc=none}
+
+\makeatletter
+\newcommand{\printrecs}{%
+  \section{Recommendations}%
+  \label{sec:recs}
+  \begin{enumerate}[leftmargin=7em,label=QAWG-REC-\arabic*:]%
+  \def\@noitemerr{\@latex@warning{Empty objective list}}%
+  \@starttoc{rec}%
+  \end{enumerate}%
 }
-{
-  \end{admonition}
-}
+\newcommand{\l@rec}[2]{#1}
+\makeatother
+
+% Write recommendations so they looks something like this:
+%
+% \begin{recommendation}{rec:label}{Brief summary}
+% Explanatory text, if any.
+% \end{recommendation}
+\NewEnviron{recommendation}[2]
+ {%
+  \label{#1}%
+  \addcontentsline{rec}{rec}{%
+    \noexpand\unexpanded{\unexpanded\expandafter{\item{#2 (\S\ref{#1})}}}%
+  }%
+  \begin{admonition}{green!5!white}{green!75!black}{Recommendation}{}\emph{#2.} \BODY \end{admonition}%
+ }%
+
 
 \begin{document}
 
@@ -46,6 +70,7 @@ Abstract.
 }
 
 \maketitle
+
 
 \section{Introduction}
 \label{sec:intro}
@@ -78,9 +103,9 @@ procedures, or other artifacts --- that should be developed to enable the
 capabilities we regard as necessary. In some cases, these components may be
 entirely new developments; in others, existing tools developed by the \gls{dm}
 subsystem may already be fit for purpose, or can be adapted with some effort.
-We have noted when this is the case.
+we have noted when this is the case.
 
-Finall,y in Appendix \ref{glo:main} we define a number of key terms which are
+finall,y in Appendix \ref{glo:main} we define a number of key terms which are
 used throughout this report and which we we suggest be adopted throughout
 \gls{dm} to provide an unambigous vocabulary for referring to QA topics.
 
@@ -89,9 +114,11 @@ used throughout this report and which we we suggest be adopted throughout
 \input{components/components.tex}
 
 \appendix
+\printrecs
 \glsaddall
 \renewcommand*{\glsautoprefix}{glo:}
 \printglossary[style=index,numberedsection=autolabel]
+
 
 \bibliography{lsst,lsst-dm,refs_ads,refs,books}
 
