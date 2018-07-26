@@ -32,8 +32,9 @@ Abstract.
   \addtohist{\vcsRevision}{\vcsDate}{Unreleased draft.}{Bellm et al.}
 }
 
-% Hyperref plays havoc with my crazy recommendation linking TOCs, so disable it.
-\hypersetup{linktoc=none}
+% Hyperref plays havoc with my crazy recommendation linking TOCs if we let it
+% turn the section name into a hyperlink, so we use the page numbers instead.
+\hypersetup{linktoc=page}
 
 \makeatletter
 \newcommand{\printrecs}{%
