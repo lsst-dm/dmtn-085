@@ -6,41 +6,101 @@
 
 \assign{John}
 
-The group considering the requirements of Science Pipelines developers for
-debugging explored a number of avenues to make developers lives easier. In
-doing, so they identified a number of areas in which current systems could be
-improved to boost both productivity and developer morale.
-
-In particular, they considered three separate scenarios in which developers
-will require support.
-
-\subsubsection{A pipeline is segfaulting}
-
-We considered the following:
+The group does not identify a single, over-arching tool or concept which would
+solve the problem of developer productivity and happiness. Instead, we believe
+that developer needs can be best addressed by making incremental improvements
+to a number of core pieces of \gls{dm} technology and infrastructure which
+team members regularly interact with. In particular, we identified the
+following major ``pain points'' for developers:
 
 \begin{itemize}
 
-\item{A pipeline is failing with a segfault;}
-\item{A developer recompiles the failing code with no optimization;}
-\item{The unoptimized code is run through a memory analysis tool\footnote{e.g. \href{http://valgrind.org}{Valgind}.};}
-\item{This gives some possible locations where arrays are being overrun;}
-\item{The unoptimized code is run under \href{https://www.gnu.org/software/gdb/}{GDB};}
-\item{This includes the need to start in \href{https://docs.python.org/3/library/pdb.html}{PDB} and attach GDB when the process enters the compiled C++ code;}
-\item{Using the debugging utilities, the dev finds where the array is being overrun.}
+  \item{The pipeline debugging system, lsstDebug, is badly documented and
+  awkward to use, and developers lack appropriate guidelines on how to use it
+  effectively.}
+
+  \item{Developers find it hard to know how to debug their code when it is
+  running at scale. Issues include parsing logs when a large number of
+  concurrent processes are running; inadequate documentation of the existing
+  Slurm system; uncertainty about replacement of Slurm with a future workflow
+  system; and difficulties in understanding the provenance of data products.}
+
+  \item{The project has issued unclear guidance and inadequate documentation
+  to developers about the appropriate tools to be used for visualizing data.
+  This is most pronounced for image visualization\footnote{Developers have the
+  impression they ``ought to'' be using Firefly, but there is much uncertainty
+  around its suitability for the task and its future development direction.},
+  but also applies to catalog data.}
+
+  \item{Developers struggle to get access to data for running tests---both
+  small and large scale---in a convenient form. Large repositories exist on
+  the project \gls{gpfs} system, but it's unclear what they contain or how
+  to effectively access them\footnote{A canonical example is the \gls{hsc}
+  public data release: the volume of data is overwhelming for a developer who
+  simply needs some representative \gls{hsc} data to test an algorithm.};
+  smaller repositories exist on GitHub\footnote{e.g.
+  \href{https://github.com/lsst/validation_data_hsc}{validation\_data\_hsc},
+  \href{https://github.com/lsst/afwdata}{afwdata},
+  \href{https://github.com/lsst/ap_verify_hits2015}{ap\_verify\_hits2015},
+  etc.}, but they are inconsistent in structure, content and documentation:
+  it's impossible for a developer to quickly identify data which is relevant
+  to their use case, or to establish whether some particular reduction of the
+  data is ``correct''. Instead, they rely on folklore and talking to peers to
+  find data that ``worked for somebody else'', with (often) predictably
+  frustrating results.}
 
 \end{itemize}
 
+To address these issues, the working group suggests the development of a
+number of separate-but-related components. These include:
 
-\subsubsection{A pipeline is throwing an exception}
+\begin{itemize}
 
-\subsubsection{A \gls{ci} run shows a regression in a \gls{metric value}}
+  \item{An updated system for instrumenting running pipeline code;
+  effectively, a revision of lsstDebug.}
 
+  \item{A revised set of tooling for generating, aggregating and analyzing
+  logs.}
 
+  \item{Revised documentation on interacting with Slurm.}
+
+  \item{Guidelines for the structure and maintenance of data repositories.}
+
+  \item{A clear roadmap for the development of visualization tools, and,
+  derived from that, guidelines on how to apply tools in the development of
+  pipelines.}
+
+\end{itemize}
+
+In addition, the WG suggests that prioritization of developer-accessible
+systems for tracking and understanding the provenance of pipeline outputs.
 
 \subsection{Drill down}
 \label{sec:design:drill}
 
-\assign{Tim}
+Drill-down workflows center on the need to quickly and efficiently identify
+data processing problems. Typically, these will be identified from
+discrepancies identified at higher levels of summary and aggregation.
+
+We therefore envisage a drill-down system which provides rapid retrieval of
+relevant quantities (metric values, image cutouts, catalog overlays, etc.)
+combined with readily-(re)configurable interactive plotting tools. This is
+provided in a browser-based tool which enables the user to rapidly access
+successive layers of detail on aggregated metrics (effectively
+``de-aggregating'' them on demand), and ultimately enables the user to
+seamlessly transition to an interactive analysis environment\footnote{i.e. a
+Jupyter notebook} primed with the data under investagion.
+
+We suggest that this system should be linked with a metric tracking system:
+selected \glspl{aggregate metric} from successive comparable\footnote{i.e.
+using the same input data, running with the same configuration} processing
+should be tracked as a time series, with the user able to identify outliers
+and rapidly switch to the drill-down system to investigate.
+
+The system implementing these capabilities must be able to handle large
+datasets---for example, an entire HSC public data release---quickly.
+Furthermore, we emphasize the importance of ease-of-use for the QA analyst in
+order to shorten debugging cycles.
 
 \input{design/drill.tex}
 
