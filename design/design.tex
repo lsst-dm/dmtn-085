@@ -1,6 +1,11 @@
 \section{Design sketch}
 \label{sec:design}
 
+In this section, we summarize the issues identified and approaches suggested
+by the groups described in \S\ref{sec:approach}. From these, we synethesize a
+number of concrete actions---tools to be developed, documentation to be
+provided, etc---we which recommend to the project in \S\ref{sec:comp}.
+
 \subsection{Pipeline debugging}
 \label{sec:design:debug}
 
@@ -57,23 +62,29 @@ number of separate-but-related components. These include:
 \begin{itemize}
 
   \item{An updated system for instrumenting running pipeline code;
-  effectively, a revision of lsstDebug.}
+  effectively, a revision of lsstDebug. This is developed further in
+  \S\ref{sec:comp:debug}.}
 
   \item{A revised set of tooling for generating, aggregating and analyzing
-  logs.}
+  logs. This is developed further in \S\ref{sec:comp:log}.}
 
-  \item{Revised documentation on interacting with Slurm.}
+  \item{Revised documentation on interacting with the workload management
+  system. This is developed further in \S\ref{sec:comp:workload}.}
 
-  \item{Guidelines for the structure and maintenance of data repositories.}
+  \item{Guidelines for the structure and maintenance of data repositories.
+  This is developed further in \S\ref{sec:comp:dataset}.}
 
   \item{A clear roadmap for the development of visualization tools, and,
-  derived from that, guidelines on how to apply tools in the development of
-  pipelines.}
+  derived from that, guidelines on how to apply those in the development of
+  pipelines. This is developed further in \S\S\ref{sec:comp:image} \&
+  \ref{sec:comp:vis}.}
 
 \end{itemize}
 
 In addition, the WG suggests that prioritization of developer-accessible
-systems for tracking and understanding the provenance of pipeline outputs.
+systems for tracking and understanding the provenance of pipeline outputs. For
+additional comments on provenance from a QA perspective, refer to
+\S\ref{sec:comp:provenance}
 
 \subsection{Drill down}
 \label{sec:design:drill}

@@ -39,19 +39,24 @@ in the obs packages and Butler, other evolvement in the software
 stack, such as handling of calibration data and reference catalog,
 can also make a once-working repository incompatible.  Therefore,
 maintenance is occassionally needed to ensure the usability of a
-dataset package. \textbf{The QAWG recommends having a per-dataset product
-owner.}\footnote{At the time of writing, our test datasets include
+dataset package\footnote{At the time of writing, our test datasets include
 the following: afwdata, ap\_verify\_hits2015, testdata\_cfht,
 testdata\_deblender, testdata\_decam, testdata\_jointcal,
 testdata\_lsstSim, testdata\_subaru, qserv\_testdata,
 validation\_data\_cfht.  validation\_data\_decam, validation\_data\_hsc,
 /datasets/auxTel, /datasets/comCam, /datasets/ctio0m9, /datasets/lsstCam,
 /datasets/decam /datasets/des\_sn, /datasets/hsc, /datasets/refcats,
-/datasets/sdss, /datasets/gapon}
+/datasets/sdss, /datasets/gapon}.
+
+\begin{recommendation}
+    {rec:dataset:owner}
+    {Each stored dataset---whether it be stored on \gls{gpfs}, GitHub, or
+    elsewhere---should have an explicitly named product owner.}
 Product owners are responsible for ensuring that the content and
 use cases of the datasets are well described and compatible with
 recent stack versions.  The owner of a dataset can typically be the
 team with immediate use cases and knowledge of its camera package.
+\end{recommendation}
 
 The Obs Pkg WG (\jira{RFC-393}) is charged to re-design and refactor
 the obs packages for maintainability and extensibility. We suggest
