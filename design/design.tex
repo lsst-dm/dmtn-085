@@ -3,8 +3,8 @@
 
 In this section, we summarize the issues identified and approaches suggested
 by the groups described in \S\ref{sec:approach}. From these, we synethesize a
-number of concrete actions---tools to be developed, documentation to be
-provided, etc---we which recommend to the project in \S\ref{sec:comp}.
+number of concrete actions --- tools to be developed, documentation to be
+provided, etc --- we which recommend to the project in \S\ref{sec:comp}.
 
 \subsection{Pipeline debugging}
 \label{sec:design:debug}
@@ -37,8 +37,8 @@ following major ``pain points'' for developers:
   around its suitability for the task and its future development direction.},
   but also applies to catalog data.}
 
-  \item{Developers struggle to get access to data for running tests---both
-  small and large scale---in a convenient form. Large repositories exist on
+  \item{Developers struggle to get access to data for running tests --- both
+  small and large scale --- in a convenient form. Large repositories exist on
   the project \gls{gpfs} system, but it's unclear what they contain or how
   to effectively access them\footnote{A canonical example is the \gls{hsc}
   public data release: the volume of data is overwhelming for a developer who
@@ -100,20 +100,81 @@ provided in a browser-based tool which enables the user to rapidly access
 successive layers of detail on aggregated metrics (effectively
 ``de-aggregating'' them on demand), and ultimately enables the user to
 seamlessly transition to an interactive analysis environment\footnote{i.e. a
-Jupyter notebook} primed with the data under investagion.
+Jupyter notebook} primed with the data under investagion. Further details
+about the design and capabilities of such a system are presented in
+\S\ref{sec:comp:drill}
 
 We suggest that this system should be linked with a metric tracking system:
 selected \glspl{aggregate metric} from successive comparable\footnote{i.e.
 using the same input data, running with the same configuration} processing
 should be tracked as a time series, with the user able to identify outliers
-and rapidly switch to the drill-down system to investigate.
+and rapidly switch to the drill-down system to investigate. This capability is
+an extension of that already provided by \gls{squash}, and is discussed
+further in \S\ref{sec:comp:squash}.
 
 The system implementing these capabilities must be able to handle large
-datasets---for example, an entire HSC public data release---quickly.
+datasets --- for example, an entire HSC public data release --- quickly.
 Furthermore, we emphasize the importance of ease-of-use for the QA analyst in
 order to shorten debugging cycles.
 
 \subsection{Datasets and test infrastructure}
 \label{sec:design:test}
 
-\assign{John}
+The group regards this part of its charge as qualitiatively different from the
+other two (\S\S\ref{sec:design:debug} \& \ref{sec:design:drill}): where those
+focus on servicing the needs of the individual developer or analyst, this
+material describes the capabilities that are required by the overall subsystem
+to track its progress and verify its deliverables.
+
+We considered the following four aspects of this part of the charge:
+
+\subsubsection{Small-scale unit and documentation tests}
+
+The current unit test and continuous integration system functions well.
+However, there are a number of improvements that we suggest to make it better.
+These include clearer instructions to developers on the expectations for
+testing (discussed in \S\ref{sec:comp:doc}) and assorted minor upgrades to the
+\gls{ci} system, primarily to enable more convenient failure notifications and
+tighter control of the test environment (\S\ref{sec:comp:ci}).
+
+The single highest priority we identified was the lack of a current system for
+performing CI on example code, documentation and (perhaps) Jupyter notebooks.
+This has already rendered many of the examples provided in the current
+codebase obsolete --- and because they aren't regularly tested, we have no way
+to know what else is broken and will fail or otherwise confuse new (or
+existing) users. We regard addressing this as one of the single highest
+priorities for the project. It is discussed further in
+\S\ref{sec:comp:doctest}.
+
+\subsubsection{Integration tests}
+
+DM's integration test needs are currently served by a heterogeneous mix of
+approaches: from ``unit'' tests which effectively test the integration of
+multiple packages, to explicit integration jobs executed by the CI
+system --- of which there are multiple types, and no common
+implementation standardf \footnote{See
+\href{https://github.com/lsst/lsst_dm_stack_demo}{lsst\_dm\_stack\_demo},
+\href{https://github.com/lsst/ci_hsc}{ci\_hsc},
+\href{https://github.com/lsst/validate_drp}{validate\_drp}, etc.} --- to large
+scale data processing exercises undertaken periodically at the
+\gls{ldf}\footnote{e.g.
+\url{https://confluence.lsstcorp.org/display/DM/Reprocessing+of+the+HSC+RC2+dataset}.}.
+
+We posit that a unified and documented approach to integration testing will
+provide lower implementation overheads, fewer surprised for developers, and
+more predictable coverage for the project. We expand on the considerations and
+design for such a system in \S\ref{sec:comp:test_pkg}.
+
+Developing a standardized approach to integration testing requires a
+standardized approach to the management of test datasets: this is addressed in
+\S\ref{sec:comp:dataset}.
+
+It also impacts upon the \gls{ci} system, and hence is relevant to
+\S\ref{sec:comp:ci}.
+
+Finally, we note that the way in which pipelines are defined and executed will
+likely evolve rapidly over the remainder of the construction period as
+technologies like SuperTask and Butler Generation 3 come into use. Given the
+rapidly-moving nature of this work, the QAWG regards them as out of scope,
+except insofar as we urge that QA tasks should be implemented and kept up to
+date with these new frameworks as they become available.

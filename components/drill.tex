@@ -1,5 +1,5 @@
-
-\subsection{Drill down and interactive dashboards} \label{sec:drill-down-design}
+\subsection{Drill down and interactive dashboards}
+\label{sec:comp:drill}
 
 \subsubsection{Metric computation and persistence} \label{sec:metric_storage}
 
@@ -62,7 +62,7 @@ In order to facilitate joining and filtering metric values by other metadata, me
 
 Currently, pipeline developers rely on a variety of ad-hoc visualization tools and custom workflows to debug processing problems and investigate the effects of new algorithms.
 The QAWG recommends development of a browser-based dashboard QA system that is designed to cater to the workflow of the debugging developer, and is informed and guided by current usage of existing tools (e.g. \texttt{pipe\char`_analysis} and \texttt{qa\char`_explorer}).
-This is separate from, and in addition to, the SQuaSH dashboard (\S \ref{sec:components:squash}).
+This is separate from, and in addition to, the SQuaSH dashboard (\S \ref{sec:comp:squash}).
 
 \begin{recommendation}
     {rec:dashboard}
@@ -118,7 +118,7 @@ From the metric dashboard, there could be an ``explore in Jupyter'' button that 
 \end{recommendation}
 
 
-This is essentially the SQuaSH system, discussed in more detail in \ref{sec:components:squash}.
+This is essentially the SQuaSH system, discussed in more detail in \ref{sec:comp:squash}.
 The high-level aggregates that SQuaSH uses may be constructed and submitted by an afterburner task that uses the per-repository metric storage.
 
 \begin{recommendation}
