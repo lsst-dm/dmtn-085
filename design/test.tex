@@ -1,0 +1,87 @@
+\subsection{Datasets and test infrastructure}
+\label{sec:design:test}
+
+The group regards this part of its charge as qualitiatively different from the
+other two (\S\S\ref{sec:design:debug} \& \ref{sec:design:drill}): where those
+focus on servicing the needs of the individual developer or analyst, this
+material describes the capabilities that are required by the overall subsystem
+to track its progress and verify its deliverables.
+
+We considered the following three aspects of this part of the charge:
+
+\subsubsection{Small-scale unit and documentation tests}
+
+The current unit test and continuous integration system functions well.
+However, there are a number of improvements that we suggest to make it better.
+These include clearer instructions to developers on the expectations for
+testing (discussed in \S\ref{sec:comp:doc}) and assorted minor upgrades to the
+\gls{ci} system, primarily to enable more convenient failure notifications and
+tighter control of the test environment (\S\ref{sec:comp:ci}).
+
+The single highest priority we identified was the lack of a current system for
+performing CI on example code, documentation and (perhaps) Jupyter notebooks.
+This has already rendered many of the examples provided in the current
+codebase obsolete --- and because they aren't regularly tested, we have no way
+to know what else is broken and will fail or otherwise confuse new (or
+existing) users. We regard addressing this as one of the single highest
+priorities for the project. It is discussed further in
+\S\ref{sec:comp:doctest}.
+
+\subsubsection{Integration tests}
+\label{sec:design:test:integration}
+
+DM's integration test needs are currently served by a heterogeneous mix of
+approaches: from ``unit'' tests which effectively test the integration of
+multiple packages, to explicit integration jobs executed by the CI
+system --- of which there are multiple types, and no common
+implementation standardf \footnote{See
+\href{https://github.com/lsst/lsst_dm_stack_demo}{lsst\_dm\_stack\_demo},
+\href{https://github.com/lsst/ci_hsc}{ci\_hsc},
+\href{https://github.com/lsst/validate_drp}{validate\_drp}, etc.} --- to large
+scale data processing exercises undertaken periodically at the
+\gls{ldf}\footnote{e.g.
+\url{https://confluence.lsstcorp.org/display/DM/Reprocessing+of+the+HSC+RC2+dataset}.}.
+
+We posit that a unified and documented approach to integration testing will
+provide lower implementation overheads, fewer surprised for developers, and
+more predictable coverage for the project. We expand on the considerations and
+design for such a system in \S\ref{sec:comp:test_pkg}.
+
+Developing a standardized approach to integration testing requires a
+standardized approach to the management of test datasets: this is addressed in
+\S\ref{sec:comp:dataset}.
+
+It also impacts upon the \gls{ci} system, and hence is relevant to
+\S\ref{sec:comp:ci}.
+
+Finally, we note that the way in which pipelines are defined and executed will
+likely evolve rapidly over the remainder of the construction period as
+technologies like SuperTask and Butler Generation 3 come into use. Given the
+rapidly-moving nature of this work, the QAWG regards them as out of scope,
+except insofar as we urge that QA tasks should be implemented and kept up to
+date with these new frameworks as they become available.
+
+\subsubsection{Metric and Performance Tracking}
+
+DM already has a metric-tracking system based on \gls{squash}. This
+effectively tracks the time evolution of a number of \glspl{aggregate metric}
+based on data processing under controlled conditions (effectively, the results
+of selected integration tests, carried out as per
+\S\ref{sec:design:test:integration}. This basic machinery is excellent, but
+has suffered from low adoption among DM developers, and it is not clear that
+any regular checking of or acting upon trends in the calculated metrics is
+being undertaken.
+
+We therefore propose a series of updates and refinements to \gls{squash},
+focusing on a series of modest enhancements to its capabilities to alert DM
+developers and management to regressions (or improvements) in selected
+performance metrics. These are developed in \S\ref{sec:comp:squash}.
+
+The primary means by which data is submitted to \gls{squash} is through the
+\href{lsst.verify}{https://github.com/lsst/verify} framework and associated
+metric definitions. The mechanisms by which this framework is integrated with
+the Science Pipelines are unclear (refer to \citeds{DMTN-057} for a
+discussion) and it has never undergone a design review or acceptance process.
+Clearer ownership and direction for this part of the system are essential to
+drive adoption. We discuss this in more detail and provide suggestions in
+\S\ref{sec:comp:verify}

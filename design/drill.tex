@@ -1,0 +1,30 @@
+\subsection{Drill down}
+\label{sec:design:drill}
+
+Drill-down workflows center on the need to quickly and efficiently identify
+data processing problems. Typically, these will be identified from
+discrepancies identified at higher levels of summary and aggregation.
+
+We therefore envisage a drill-down system which provides rapid retrieval of
+relevant quantities (metric values, image cutouts, catalog overlays, etc.)
+combined with readily-(re)configurable interactive plotting tools. This is
+provided in a browser-based tool which enables the user to rapidly access
+successive layers of detail on aggregated metrics (effectively
+``de-aggregating'' them on demand), and ultimately enables the user to
+seamlessly transition to an interactive analysis environment\footnote{i.e. a
+Jupyter notebook} primed with the data under investagion. Further details
+about the design and capabilities of such a system are presented in
+\S\ref{sec:comp:drill}
+
+We suggest that this system should be linked with a metric tracking system:
+selected \glspl{aggregate metric} from successive comparable\footnote{i.e.
+using the same input data, running with the same configuration} processing
+should be tracked as a time series, with the user able to identify outliers
+and rapidly switch to the drill-down system to investigate. This capability is
+an extension of that already provided by \gls{squash}, and is discussed
+further in \S\ref{sec:comp:squash}.
+
+The system implementing these capabilities must be able to handle large
+datasets --- for example, an entire HSC public data release --- quickly.
+Furthermore, we emphasize the importance of ease-of-use for the QA analyst in
+order to shorten debugging cycles.
