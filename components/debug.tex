@@ -1,20 +1,67 @@
 \subsection{Updated pipeline debugging system}
 \label{sec:comp:debug}
 
-\assign{Simon}
+This component is derived from \S\ref{sec:design:debug}.
 
-The debugging system must be both reasonably powerful and easy to use.
-It should also be obvious from help/doc strings how to turn on debugging.
-There is a tradeoff between granularity and usability.
+The existing pipeline debugging system, lsstDebug, provides useful
+capabilities, but --- perhaps due to an idiosyncratic user interface and lack
+of documentation --- is frequently not properly exploited. Since the total
+amount of code involved in the old system, both implementing it and using it,
+is modest, we suggest its wholesale replacement by an alternative, more
+approachable, system.
 
-The recommendation is that the debugging system be simplified to be configurable at the task level.
-Debugging is turned on via a config parameter.
-This allows for single sub-tasks to turn on debugging independently.
-In practice this means that statements like \texttt{if lsstDebug:} would turn into \texttt{if self.config.debug}.
+\begin{recommendation}
+    {rec:comp:debug}
+    {Develop a new pipeline instrumentation and debugging system, replacing lsstDebug}
+The total effort expended here should be modest: we expect that design,
+implementation and documentation of a new system should take no more than one
+full time equivalent month. Converting existing code make take somewhat
+longer.
+\end{recommendation}
 
-This brings up the obvious issue that free functions/non-task methods called in the \texttt{run} method of a task do not necessarily have the debugging flag passed into them.
-It becomes the responsibility of the implementer to pass \texttt{self.config.debug} into methods that have debug functionality.
+The capabilities of the new system would remain broadly the same as lsstDebug.
+Specifically, enabling debugging mode would set a flag within the codebase.
+Developers can check for that flag, and take appropriate actions (e.g.
+spawning additional plots) if it is set. However, establishing a baseline
+expectation of what actions are appropriate or expecting within this debugging
+context will require input from the leadership team.
 
-Derived from \S\ref{sec:design:debug}.
+\begin{recommendation}
+    {rec:comp:debug:docs}
+    {Guidelines for the effective use of the pipeline debugging system should be supplied to developers}
+These guidelines should be supplied by the Science Pipelines Product Owners
+and the LSST Software Architect, and made available through the DM Developer
+Guide \citeds{DevGuide}.
+\end{recommendation}
 
-i.e. redesigned \texttt{lsstDebug}.
+Developers and users rightly expect that the debugging system will provide an
+idiomatic user interface. We suggest that the complexity of the existing
+lsstDebug interface has been a bar to adoption. We therefore propose that
+simplicity be key aim of the new system. In that vein, we suggest that the
+debugging system should be controlled by a single boolean parameter, with no
+further user-driven customization, and with very explicit documentation. We
+acknowledge that this is a direct tradeoff between granularity and simplicity,
+and suggest that history drives us to err on the side of simplicity.
+
+\begin{recommendation}
+    {rec:comp:debug:use}
+    {Debugging mode shoud be binary: it is either enabled or disabled, with no further configuration}
+    For example, within a \texttt{Task}, one might check if debugging mode is
+    enabled with a statement like \texttt{if self.config.debug: ...}.
+\end{recommendation}
+
+\begin{note}
+As of 2018-08-21, I (JDS) have removed references to enabling debugging
+through the task config system. This is based on OOB discussions that the
+config is most appropriate for recording options which affect the science
+outputs, whereas (one assumes) that the code should generate the same science
+results whether or not debugging is enabled. I think that means it really
+wants to be driven by a command line argument and a set of explicit arguments,
+but I am happy to be persuaded otherwise.
+\end{note}
+
+The natural consequence of this is that debugging of tasks involved by some
+form of middleware (e.g. \texttt{CmdLineTask}, \texttt{PipelineTask} called by
+an executor) should receive an explicit argument enabling debugging. All other
+callables which support debugging must take an explict argument which enables
+it.
