@@ -1,22 +1,53 @@
 \subsection{Logging}
 \label{sec:comp:log}
 
-\assign{Simon}
+This component is derived from \S\ref{sec:design:debug}.
 
-Logging is an important aspect of running large data processing.
-It is also integral to quality assessment as the logging information provides important contextual information when inspecting data for quality issues.
-Specifically, log messages presenting information about the processing: e.g. PSF width, number of stars used in a model fit, can indicate problems with the algorithmic behavior or input data.
-Logging also provides information about potential causes for unexpected termination including exit codes and exeptions.
+Logging is an important aspect of running large data processing.  It is also
+integral to quality assessment as the logging information provides important
+contextual information when inspecting data for quality issues.  Specifically,
+log messages presenting information about the processing: e.g. PSF width,
+number of stars used in a model fit, can indicate problems with the
+algorithmic behavior or input data.  Logging also provides information about
+potential causes for unexpected termination including exit codes and
+exeptions.
 
-While logs can be straightforward to parse when only a small number of concurrent processes are being used, they quickly become harder to understand as the number of processes increases.
+DM already provides a logging system (the ``log'' package), and the API
+documentation provided for
+it\footnote{\url{https://developer.lsst.io/stack/logging.html}} is
+adequate\footnote{It is, perhaps, worth noting that the configuring the output of the
+logging system is much less straightforward and well documented:
+\url{http://doxygen.lsst.codes/stack/doxygen/x_masterDoxyDoc/log.html\#configuration}.}.
 
-The logging component has the following attributes:
+However, the outputs of the logging system become increasingly hard to parse
+as the number of concurrent processes increases: a common complaint when
+running large-scale data processing is that it's difficult to identify
+failures and to understand where they came from.
+
+\begin{recommendation}
+  {rec:comp:log}
+  {A log aggregation and monitoring service should be provided for large-scale processing jobs at the Data Facility}
+Such a service should not be a requirement for jobs to execute (in particular,
+when running in non-Data Facility environments, logs should continue to be
+generated and collected as at present.
+\end{recommendation}
+
+Log aggregation should provide the following capabilities:
+
 \begin{itemize}
-\item Configurable for logging granularity. For example, \texttt{INFO}, \texttt{WARN}, \texttt{ERROR}.
-\item Trivial to retrieve time ordered logs for a thread.
-\item Possible to retrieve logs, exit status, or exceptions for threads ending in an unexpected state.
-\item Possible to retrieve enough information to rerun the data units that were unprocessed because of processes ending in unexpected state.  KSK: perhaps this is solved by the provenance system.
-\item Searchable per process for regexp and timestamp.
+\item{Display all log messages from a given pipeline execution;}
+\item{Display messages at a selected log level (\texttt{INFO}, \texttt{WARN}, \texttt{ERROR}, etc);}
+\item{Display time-ordered logs for a given thread;}
+\item{Display logs, exit status and/or exceptions for threads ending in an unexpected state;}
+\item{Searchable per process for regexp and timestamp.}
 \end{itemize}
 
-Derived from \S\ref{sec:design:debug}.
+We believe that this capabilities could be effectively provided by building
+atop off-the-shelf log aggregation tools such as
+Logstash\footnote{\url{https://www.elastic.co/products/logstash}}. However, we
+suggest that exploring synergies with existing or planned Data Facility
+services is likely essential. However, we caution that effective log managment
+capabilities are of increasing importance not just in the operational era but
+in the immediate future, as we move towards large-scale data processing in
+support of commissioning: deploying a basic version of this service should be
+regarded as a high priority.
