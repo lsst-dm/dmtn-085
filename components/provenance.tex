@@ -24,8 +24,9 @@ With the current design of the Gen 3 Middleware, each dataset
 can be linked to provenance information such as input datasets,
 pipeline definition, configurations, and software version
 (e.g. DMS-MWST-REQ-0024 and DMS-MWBT-REQ-0096 in LDM-556).
-\gls{QC} metric values will be Butler datasets so they will be associated
-with specific data IDs, and their provenance can be traced like
+\gls{QC} metric values will be Butler datasets and have Butler data IDs
+(as recommended in \S \ref{rec:metric_dataId}), so
+their provenance can be traced like
 other datasets. In the Gen 3 Middleware design, Butler/SuperTask
 framework is responsible of producing provenance.  For production
 runs, the Data Backbone Services may store additional provenance,
