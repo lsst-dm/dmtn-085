@@ -1,28 +1,42 @@
-\subsection{Guidance on visualization}
+\subsection{Visualization}
 \label{sec:comp:vis}
-
-\assign{Simon}
-We decided that this section should first be seeded with contexts for visualization. We can then go through and give specific guidance.
-
-Contexts:
-\begin{itemize}
-\item Notebooks in-line: matplotlib-ish
-\item Dashboard like visualization: health status (grafana?)
-\item Pipelines debugging visualization: both persisted PNGs and pop up vis
-\item Purpose built QA visualization: Like the multisky plot from \texttt{qa\_explorer}
-\item Exploratory: Single plots with interactivity, including zoom and pan
-\item Linked plots: Interaction in one frame causes chnge of state in another plot
-\item Image visualization: (covered elsewhere)
-\item Publication plotting
-\item Static plots for reports
-\item Plotting from a non-notebook interactive setting
-\item Rendering of cached time series: SQuaSH
-\end{itemize}
 
 Derived from \S\ref{sec:design:debug}.
 
-We're requesting a set of guidelines for developers here, not a new framework
---- but that's still a concrete deliverable (it's just documentation, rather
-than code). We might suggest that these guidelines be developed by a new WG,
-per Simon's
-suggestion\footnote{\url{https://confluence.lsstcorp.org/display/DM/Pipeline+Debugging+Design}}.
+Broadly, we regard ``visualization'' as an umbrella term covering both visualizations derived from catalogs as well as image display and manipulation.
+The concerns expressed by developers and others are, on the whole, common to both; the solutions may not be.
+
+For both visualization regimes, the predominant request from developers is that the project provide them with clear guidance as to both what resources will be provided and supported by the LSST construction effort (for example, tools like Firefly or abstractions like \texttt{afwDisplay}) and which tools they are required or expected to use in the interest of maintaining a coherent and consistent codebase and set of outputs.
+
+In this section, we concentrate on ad-hoc visualization in support of the regular pipeline developer.
+In \S\S\ref{sec:design:drill} and \ref{sec:comp:drill}, we describe the design of an interactive ``drill-down'' tool, which will provide a number of plotting and data exploration capabilities.
+It is our expectation that, however comprehensive such a tool might become, there will always be a necessity for individual developers to be able to quickly investigate their data in as flexible a way as possible; conversely, wherever practical we should enable developers to exploit, and encourage them to remain consistent with, the capabilities and conventions delivered by the drill-down tool.
+These sections should therefore be regarded as complementary.
+
+\subsubsection{Catalog visualization}
+\label{sec:comp:vis:catalog}
+
+The group notes that there are many contexts in which visualizations derived from catalogs might be required (for example, in-line display in a Jupyter notebook, persisting plots from a debugging session, as described in \S\ref{sec:comp:debug}, preparing plots for publication, etc), which may all have substantially different requirements.
+We also note that there exists a diverse infrastructure of scientific plotting and data exploration tools in the Python community, a comprehensive selection of which has been collated by the PyViz project\footnote{\url{http://pyviz.org}}, which also provides documentation on effectively using them in conjunction with each other.
+Given that, we regard it as unnecessary, and indeed undesirable, for LSST to attempt to standardize on any particular plotting tool: we should rather encourage developers to exploit community resources with minimal overhead.
+
+\begin{recommendation}
+  {rec:comp:vis:catalog:pyviz}
+  {DM should formally adopt the PyViz ecosystem}
+This adoption would include, for example, including PyViz tools in a regular installation of the LSST Stack; providing training and documentation for developers and --- crucially --- developing interfaces which enable LSST conventions (afw tables, the Data Butler) to be used in the PyViz context.
+\end{recommendation}
+
+Many visualization use cases involve manipulating data at a larger scale than can conveniently be done on a single compute node.
+Within the PyViz ecosystem, Dask\footnote{http://dask.pydata.org/en/latest/} is the preferred approach.
+We note that there many be some redundancy between Dask and the LSST middleware (Butler, PipelineTask and appropriate executors, etc).
+However, Dask provides a convenient, easy to install and use solution which can immediately address developer needs.
+
+\begin{recommendation}
+  {rec:comp:vis:catalog:dask}
+  {DM should adopt Dask to enable users to work with larger than memory data}
+This might be achieved by providing users with the ability to spin up Dask clusters on demand using (say) Kubernetes, or by providing a Dask cluster at the LSST Data Facility to which users can connect.
+If ongoing middleware development renders this obsolete, then it can be retired.
+\end{recommendation}
+
+\subsubsection{Image visualization}
+\label{sec:comp:vis:image}
