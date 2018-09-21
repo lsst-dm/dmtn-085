@@ -3,117 +3,90 @@
 
 Derived from \S\ref{sec:design:test}.
 
-\assign{Hsin-Fang}
+The DM subsystem curates a number of ``datasets'': collections of data related by some underlying theme or use case.
+These themes might include originating from the same instrument or facility (e.g. testdata\_cfht); being used to test a particular package (e.g. testdata\_jointcal); or addressing some particular science case (e.g. ap\_verify\_hits2015).
 
-The key considerations and motivations to standardize test datasets
-in the construction phase include:
+Currently, DM's datasets are heterogeneous: there is no accepted standard for the type of data that a dataset should contain, and nor is there any standard for where the dataset is stored or how it is curated.
+Some of DM's datsets are stored on \gls{gpfs} at the LSST Data Facility; some are made available through Git LFS\footnote{\url{https://git-lfs.github.com}; \url{https://developer.lsst.io/git/git-lfs.html}}; some contain only raw data; some contain calibration data; some contain processed data; some are regularly updated; some have documentation describing in detail what the dataset contains.
 
-\begin{itemize}
-
-\item{Developers would like low-friction access to test datasets.
-A central location where developers can look up what has been curated
-is desired.}
-
-\item{Developers would like datasets at multiple scales and
-representative of various data quality and observing conditions.
-The properties of these datasets much be well understood.}
-
-\item{Besides raw (unprocessed) data, intermediate and final data
-products from various stages of pipeline processing are wanted.
-They facilitiate testing of algorithms which are only relevant to
-later parts of the pipeline or analysis codes without the need of
-regenerating the products.}
-
-\item{Datasets require continuing maintenance. Data products based
-on a recent software release are usually wanted.}
-
-\end{itemize}
-
-
-The standard format of a dataset package is a ready-to-use Butler
-repository and follows the format of a Butler repository as defined
-in its corresponding obs package.  The format is configurable by
-design, however, it is tied to the codes in the stack, so can change
-from a software stack version to another.  Besides implementations
-in the obs packages and Butler, other evolvement in the software
-stack, such as handling of calibration data and reference catalog,
-can also make a once-working repository incompatible.  Therefore,
-maintenance is occassionally needed to ensure the usability of a
-dataset package\footnote{At the time of writing, our test datasets include
-the following: afwdata, ap\_verify\_hits2015, testdata\_cfht,
-testdata\_deblender, testdata\_decam, testdata\_jointcal,
-testdata\_lsstSim, testdata\_subaru, qserv\_testdata,
-validation\_data\_cfht.  validation\_data\_decam, validation\_data\_hsc,
-/datasets/auxTel, /datasets/comCam, /datasets/ctio0m9, /datasets/lsstCam,
-/datasets/decam /datasets/des\_sn, /datasets/hsc, /datasets/refcats,
-/datasets/sdss, /datasets/gapon}.
+This lack of standardization limits the reuse of datasets (it is hard to reuse a dataset curated for one purpose for some other test unless one fully understands its contents) and means that developers often struggle to find the most appropriate data to test or debug some particular algorithm.
 
 \begin{recommendation}
-    {rec:dataset:owner}
-    {Each stored dataset---whether it be stored on \gls{gpfs}, GitHub, or
-    elsewhere---should have an explicitly named product owner.}
-Product owners are responsible for ensuring that the content and
-use cases of the datasets are well described and compatible with
-recent stack versions.  The owner of a dataset can typically be the
-team with immediate use cases and knowledge of its camera package.
+    {rec:comp:dataset:standard}
+    {A standardized format for dataset repositories should be adopted across DM}
+Obviously, not all repositories will have exactly the same contents: in some cases, it may be necessary for a repository to contain (say) calibration products, while in others they may be inappropriate.
+However, it should be possible to establish at a glance what the contents of each dataset is; if calibration products \emph{are} included, it should be immediately obvious what they are and how to apply them.
 \end{recommendation}
 
-The Obs Pkg WG (\jira{RFC-393}) is charged to re-design and refactor
-the obs packages for maintainability and extensibility. We suggest
-the Obs Pkg WG take into considerations in their design to mitigate
-the close tie between a Butler repository and its obs package
-implmentations, as well as adopt a common structure across different
-cameras when possible.  After the refactoring, the obs packages
-shall rarely change so the dataset format will be more stable.  The
-QAWG recommends prioritise the Obs Pkg WG.
-
-In some cases, a dataset pacakge may contain additional data that are not
-tenable in the format of a Butler repository. We recommend following the
-format as described in DM Developer Guide Common Dataset Organization
-and Policy \footnote{\url{https://developer.lsst.io/services/datasets.html}}
-and update the policy as needed.
-
-As for the storage of test datasets, we consider any test dataset
-package being either small or large, based on its size and use cases.
-The QAWG's recommendations are as follows.
+The key desiderata for standardizing the format of test datasets are:
 
 \begin{itemize}
-  \item \textbf{Storage of small datasets}
+\item{
+    Developers would like low-friction access to test datasets.
+    A central location where developers can look up what has been curated is desired.
+}
+\item{
+    Developers would like datasets at multiple scales and representative of various data quality and observing conditions.
+    The properties of these datasets must be well understood.
+}
+\item{
+    Besides raw (unprocessed) data, intermediate and final data products from various stages of pipeline processing are desired.
+    They facilitiate testing of algorithms which are only relevant to later parts of the pipeline or analysis codes without the need of regenerating the products.
+}
+\item{
+    Datasets require continuing maintenance.
+    Data products based on a recent software release are usually wanted.
+}
+\end{itemize}
 
-  We consider small datasets as those smaller than around 100 GB
-  and comfortably operatable as a Git LFS repository. They are
-  carefully selected to meet specific use cases. The use cases of
-  small datasets include
+These considerations aside, this WG does not make a specific recommendation about the detailed layout of datasets, beyond noting the existence of the Common Dataset Organization and Policy \footnote{\url{https://developer.lsst.io/services/datasets.html}} which might form a convenient basis for further development.
 
-  \begin{itemize}
-    \item{as input test data in CI jobs in the DM Jenkins system
-          (\S\ref{sec:comp:ci});}
-    \item{as example data in documentations, demos, and tutorials.}
-  \end{itemize}
+Regardless of the layout adopted, expect that the dataset will need to evolve with time: as new versions of the LSST code are released, expectations about the both the contents of data repositories and the format of persisted data products will change, occasionally in backwards-incompatible ways.
+For a dataset to remain useful, active curation is required.
 
-  To meet their needs, we recommend them
+\begin{recommendation}
+    {rec:comp:dataset:owner}
+    {Each dataset should have an explicitly named product owner}
+Product owners are responsible for ensuring that the content and use cases of the datasets are well described and compatible with recent stack versions.
+The owner of a dataset could often be the a member of team with immediate use cases and knowledge of the relevant camera package.
+\end{recommendation}
 
-  \begin{itemize}
+The variety of different sources and use-cases for datasets means that they span a wide range of sizes.
+It is therefore impractical to store and distribute them in the same way.
+Instead, the QAWG suggests they can usefully be divided into two categories: \emph{small} and \emph{large}.
+
+\begin{description}
+
+\item[Small] datasets are those smaller than 100\,GB in total size.
+They are intended for use, for example:
+\begin{itemize_single}
+    \item{as input test data in \gls{ci} jobs;}
+    \item{as example data in documentation, demos, and tutorials.}
+\end{itemize_single}
+We recommend that they are:
+\begin{itemize_single}
     \item{packaged as EUPS products;}
     \item{made publicly available on GitHub;}
     \item{stored as Git LFS repositories as needed;}
-    \item{tagged their versions with the DM software releases;}
-    \item{documented clearly its use cases and named product owner for each dataset;}
-  \end{itemize}
+    \item{versioned with DM software releases.}
+\end{itemize_single}
 
-  \item \textbf{Storage of large datasets}
+\item[Large] datasets are bigger than 100\,GB in total size.
+They are intended for use, for example:
+\begin{itemize_single}
+    \item{in large scale integration tests;}
+    \item{in flushing out edge cases which may not be apparent from smaller data volumes;}
+    \item{for archiving outputs from engineering facilities like the Camera test stands.}
+\end{itemize_single}
+We recommend that they are:
+\begin{itemize_single}
+    \item{made available on project-provided shared network filesystems (i.e. \gls{gpfs});}
+    \item{protected under a disaster recovery policy.}
+\end{itemize_single}
 
-  We consider large datasets as those larger than around 100 GB and
-  hence transferring over network takes longer than an hour typically.
-  They can contain edge cases that have not been identified to form
-  specific small test datasets, or for use cases in which data
-  volume is important.  We recommend them
+\end{description}
 
-  \begin{itemize}
-    \item{made available on LSST development machines (currently on GPFS);}
-    \item{usable and shared by team members;}
-    \item{protected under a disaster recovery policy;}
-    \item{documented clearly its use cases and named product owner for each dataset;}
-  \end{itemize}
-
-\end{itemize}
+\begin{recommendation}
+    {rec:comp:dataset:storage}
+    {Datasets may be stored on either shared filesystems or Git LFS as appropriate, depending on the total size of the dataset}
+\end{recommendation}
