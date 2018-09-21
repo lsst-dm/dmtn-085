@@ -1,4 +1,4 @@
-\section{Core components}
+plsection{Core components}
 \label{sec:comp}
 
 \input{components/debug.tex}
@@ -7,20 +7,51 @@
 \input{components/vis.tex}
 \input{components/provenance.tex}
 
-\subsection{Documentation content updates}
-\label{sec:comp:doc}
+\subsection{Code quality documentation}
+\label{sec:comp:code_quality}
 
 Derived from \S\ref{sec:design:test}.
 
-\assign{John}
+DM values code quality, with an elaborate set of coding standards\footnote{\url{https://developer.lsst.io/coding/intro.html}}, substantial unit test suites, regular code review, and a set of automatic tests for compliance with code style rules.
+However, while essential, these are often inconsistently applied, and developers are left confused about what is actually required of them.
 
+\subsubsection{Unit tests}
+\label{sec:comp:code_quality:unittest}
+
+The scope of DM's unit test system is not well defined.
+Tests range from true unit tests---limited in scope to one ``unit'' of code---to what are effectively integration tests, relying on functionality from many packages working in concert and testing that the results meet some (often apparently arbirary) numerical threshold.
+At this stage in the construction project, we do not believe that a wholesale attempt to refactor or reconsider the way that these tests are constructed is plausible, though: we suggest that the current situation is tolerable for the remainder of the project.
+
+However, developers continue to take inconsistent approaches to testing, and disagree (occasionally publicly) about what it is necessary to test, in how much detail, and in what way.
+We further note that the Developer Guide provides advice which is obsolete and widely ignored\footnote{\url{https://developer.lsst.io/coding/unit-test-policy.html}}.
+We believe that refreshing the developer-facing documentation, together with closer attention to the form and structure of tests in code reviews (\S\ref{sec:comp:code_quality:review}), will pay dividends in terms of reducing confusion and the potential for disagreement.
+
+\begin{recommendation}
+    {rec:comp:code_quality:unittest}
+    {Obsolete and unclear sections of the Developer Guide should be rewritten to provide clearer guidance on unit tests}
+    This should include, for example:
 \begin{itemize}
 
-  \item{Clearer guidance on unit tests.}
-  \item{Clearer guidance on code review, with requirements for test coverage
-  etc.}
+  \item{Guidance for unit vs. integration tests, and which packages it is appropriate to write tests in (e.g. is it adequate for certain functionality only to be tested through packages like ci\_hsc?);}
+  \item{Requirements for code coverage;}
+  \item{Appropriate languages for writing tests (should C++ code be tested in C++, or is it acceptable---or encouraged---to test only the Python-wrapped version?;}
+  \item{Are there certain types of code which it is appropriate not to test (e.g. boilerplate accessor methods)? How exhaustive should tests be?}
 
 \end{itemize}
+
+\end{recommendation}
+
+\subsubsection{Code review}
+\label{sec:comp:code_quality:review}
+
+Various aspects of the unit test system, e.g. coverage requirements, are best enforced through code review.
+However, we currently provide minimal written guidelines to developers about what code reviewers should be looking for\footnote{e.g. ``is there adequate unit test coverage for the code?'', but with no guidance on what constitutes ``adequate''}.
+
+\begin{recommendation}
+    {rec:comp:code_quality:review}
+    {The Developer Guide should be expanded to provide checklist-style documentation for code reviewers making clear what is expected from them
+during the review.}
+\end{recommendation}
 
 \subsection{Testing for documentation}
 \label{sec:comp:doctest}
@@ -49,7 +80,7 @@ Derived from \S\ref{sec:design:test}.
   \item{Better notifications.}
   \item{Better descriptions of which jobs do what.}
   \item{Clear description of what Developers are required to do before merging
-  to master (see also \S\ref{sec:comp:doc}).}
+  to master (see also \S\ref{sec:comp:code_quality}).}
 
 \end{itemize}
 
