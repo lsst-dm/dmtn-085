@@ -1,0 +1,49 @@
+\subsection{Documentation and examples}
+\label{sec:comp:doctest}
+
+Derived from \S\ref{sec:design:test}.
+
+Across the codebase there are scripts, example code, and other utilities.
+Often these are lurking in \texttt{examples} directories in stack packages.
+Occasionally they are exposed as Jupyter notebooks, sometimes living in separate repositories.
+These examples are generally hard to discover; often, they are only made available to new team members (or external third parties) by chance conversation.
+
+\begin{recommendation}
+    {rec:sec:comp:doctest:index}
+    {Provide a central location where examples, scripts and utilities which are not fundamental to pipeline execution are indexed and made discoverable}
+See also \jira{DM-15807}.
+\end{recommendation}
+
+We observe that many of these examples are old, obsolete and often broken.
+We note that users attempting to run these examples will frequently report that they are found to be non-functional.
+We further observe that developers are unclear about their obligations for updating these examples when writing new code, an issue which is compounded when the code being changed is in a different package from the affected example.
+Finally, we regard broken examples as contributing to an actively hostile user experience: no example is better than a misleading or failing one.
+
+\begin{recommendation}
+    {rec:sec:comp:doctest:policy}
+    {The Project should adopt a documented (in the Developer Guide) policy on the maintenance of example code}
+\end{recommendation}
+
+Ultimately, \emph{all} code --- include examples --- should be tested in the \gls{ci} system: see below.
+However, pending a mechanism for this, we suggest that:
+
+\begin{itemize}
+    \item{Developers are \textit{not} required to search the codebase for examples which may be affected by changes they are making elsewhere;}
+    \item{
+        When a broken example is discovered, it may be fixed if the changes required are trivial.
+        However, if substantial effort would be needed, the example should simply be removed and an issue filed on Jira to request its reinstatement in future.
+    }
+\end{itemize}
+
+Ultimately, we suggest that examples should be tightly intyegrated with the overall documentation effort.
+
+
+\begin{recommendation}
+    {rec:sec:comp:doctest:ci}
+    {The Project should prioritise the development of a documentation system which makes it convenient to include code examples and which tests those examples as part of a documentation build}
+\end{recommendation}
+
+There are various technologies which could be adoped to to address this goal\footnote{For example, \href{https://jupyter.org/}{Jupyter notebooks} or \href{http://www.sphinx-doc.org/en/stable/ext/doctest.html}{Sphinx doctests}.}.
+The WG suggests that standardizing upon a single technology is essential, but takes no position as to which technology is most appropriate.
+
+Finally, we note that the the same concerns apply to executable code (in \texttt{bin} directories) which is not regularly tested in CI.
