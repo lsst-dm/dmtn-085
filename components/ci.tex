@@ -3,15 +3,52 @@
 
 Derived from \S\ref{sec:design:test}.
 
-\assign{John}
+DM's ``Jenkins'' \gls{ci} system provides a number of essential services to the Project and is a core part of developer workflow.
+However, the QAWG suggests that a relatively modest set of changes could dramatically improve its usefulness to developers and to the project overall.
 
+\subsubsection{Notifications and failures}
+
+Most importantly, the QAWG suggests that Jenkins should be more helpful in enabling rapid response to build failures.
+
+\begin{recommendation}
+    {rec:comp:ci:notify_stakeholders}
+    {When running regularly scheduled (timer) jobs on the \texttt{master} branch of any releasable product, any build failure should be announced prominently to key stakeholders}
+Those stakeholders should include:
 \begin{itemize}
-
-  \item{Test coverage.}
-  \item{Tighter control of the environment.}
-  \item{Better notifications.}
-  \item{Better descriptions of which jobs do what.}
-  \item{Clear description of what Developers are required to do before merging
-  to master (see also \S\ref{sec:comp:code_quality}).}
-
+  \item{Senior DM management (DM Project Manager, DM Software Architect, Science Pipelines T/CAMs and Science Leads);}
+  \item{The developer who caused the failure, if it is possible to identify them}
 \end{itemize}
+The term ``prominent'' should be taken to indicate a personalised message (e.g. e-mail, direct Slack message), not a general posting in a Slack channel which regularly sees traffic.
+\end{recommendation}
+
+\begin{recommendation}
+    {rec:comp:ci:integration_failure}
+    {The Developer Guide should provide guidance about expected responses to Jenkins failures}
+For example, the policy for handling integration test (e.g. ci\_hsc) failures a merge must be documented: who is responsible for checkinf for failure? Should the merge be reverted? Who is responsible for doing so?
+\end{recommendation}
+
+\subsubsection{Execution environment}
+
+DM requires a range of external packages (NumPy, SciPy, matplotlib, etc).
+Versioning constraints on these are checked by ``stub'' packages at configuration time.
+Typically, the only check applied is that the available version exceeds some minimum: no maximum versioning constraint is enforced.
+This exposes us to possible API breakage in newer versions of upstream packages.
+We do not regard this as requiring urgent intervention, but the team may wish to consider enforcing version maximums at some point in the future.
+
+For maximum coverage, all tests should be run with all possible combinations of external packages.
+In practice, of course, this is prohibitive.
+However, it is essential that the code be shown to work with the minimum versions of all packages documented as required.
+
+\begin{recommendation}
+    {rec:comp:ci:environment}
+    {The versions of external packages used in the Jenkins system must always correspond to the minimum versions specified in stub packages and/or in the document list of prerequisites}
+\end{recommendation}
+
+We note that the details of this recommendation may be subject to alteration, depending on changes to the DM release process and the way it interacts with third party dependencies.
+However, the spirit of the recommendation --- that our code must be checked with the library versions it claims to support --- should stand in any eventuality.
+
+\begin{recommendation}
+    {rec:comp:ci:versions}
+    {The project should adopt a single source of dependency information and versions}
+This might consist of ``stub'' EUPS packages, or of a Conda environement, or of a list of packages on a website, but there must be \emph{one} unambiguously authoritiative source of information.
+\end{recommendation}
