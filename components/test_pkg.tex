@@ -1,43 +1,42 @@
-\subsection{Standard test package design}
+\subsection{Standard format test packages}
 \label{sec:comp:test_pkg}
 
 Derived from \S\ref{sec:design:test}.
 
-\assign{Hsin-Fang}
+Analagously to various inconsistent forms of packaging datasets described in \S\ref{sec:comp:dataset}, we also have a variety of different styles of packages which are fundamentally designed to perform some form of integration testing: that is, executing a test suite which exercises multiple consitutent parts of the DM simultaneously.
+Broadly, we consider that these fall into one of two categories:
 
-Currently, automatic continuous integration tests are performed via
-multipla packages under two designs: (1) Scons-based execution, including
-ci\_hsc and ci\_ctio0m9, and (2) exeuction through shell scripts
-in validate\_drp.  Both ci\_hsc and validate\_drp are run in
-Jenkins and triggered by timers every night (\S\ref{sec:comp:ci}).
+\begin{enumerate}
+    \item{Scons-based execution, including ci\_hsc and ci\_ctio0m9; or}
+    \item{Shell-script based, including validate\_drp and ap\_verify\footnote{But note that this shell-script entry point may cover a variety of lower-level implementation details, such as LSST-standard \texttt{CmdLineTask}s, Python scripts, or further shell scripting.}.}
+\end{enumerate}
 
-It's QAWG's understanding that the validate\_drp scripts will
-eventually replace ci\_hsc and ci\_ctio0m9, and a set of test scripts
-will be run in a meta-package named lsst\_ci.  However, at the time
-of writing, the validate\_drp scripts test only the single frame
-processing step, while ci\_hsc exercises almost the entire end-to-end
-DRP pipelines.  There has not been sufficient resources in implementing
-further processing in validate\_drp.  Similarly, the lsst\_dm\_stack\_demo
-repository should be converted into an EUPS product and a test
-script added to lsst\_ci for execution (\jira{DM-14806}).
+Often packages of this type are designed for automatic execution within the Jenkins environment, typically on nightly timers, but we note that:
 
-The QAWG recommends priority to unify the CI test package design and finish
-the transition to validate\_drp. If such effort cannot be allocated,
-documentations should be added to clearly describe the status quo, and
-recommendations for developers during the transition should be added to the
-Developer Guide (similar to \S\ref{sec:comp:code_quality} and
-\S\ref{sec:comp:ci}). Before validate\_drp can replace ci\_hsc and
-ci\_ctio0m9, the packages should be maintained.
+\begin{itemize_single}
+    \item{Even for packages designed with Jenkins in mind, being able to run standalone is still generally essential;}
+    \item{We expect future integration tests to involve executing large-scale jobs which will run on cluster-scale hardware at the Data Facility. Such jobs may be coordinated by Jenkins, but will (likely) not run entirely on Jenkins build agents.}
+\end{itemize_single}
 
+We consider that broadly the same benefits to adopting a consistent structure in these packages apply here as in \S\ref{sec:comp:dataset}.
+In particular, adopting a standardized design would enable:
+
+\begin{itemize}
+    \item{Developers to make use of existing tests when developing new algorithms with minimal overhead;}
+    \item{New tests to be added without significant design work.}
+\end{itemize}
 
 \begin{recommendation}
-  {rec:comp:test_pkg:ci}
-  {The CI design should address the use cases of existing packages
-   (lsst\_dm\_stack\_demo, ci\_hsc, validate\_drp) and unify them into
-   one consistent design}
+  {rec:comp:test_pkg:standard}
+  {A standardized test package design should be developed which addresses all existing use cases}
+Existing test packages (lsst\_dm\_stack\_demo, ci\_hsc, validate\_drp, ap\_verify, etc) should be adapted to the new design, and, where possible, merged with each other.
 \end{recommendation}
+
+Finally, we suggest that the existing variety of test packages reflects a lack of clarity and orthogonalization as to exactly what functionalty can and should be tested in \gls{ci} and on what cadences.
+
 \begin{recommendation}
-  {rec:comp:test_pkg:doc}
-  {The current status quo of the CI system should be well documented
-   and updated during the transition}
+  {rec:comp:test_pkg:ci_doc}
+  {A coherent plan for integration testing at all scales should be developed and published}
+Such a plan should then drive the development of the test package standard discussed above.
+Note \jira{DM-15348} in this context.
 \end{recommendation}
