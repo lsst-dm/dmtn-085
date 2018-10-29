@@ -1,0 +1,109 @@
+\subsection{Metric collection \& tracking}
+\label{sec:comp:metric}
+
+This section is derived from \S\S\ref{sec:design:drill} and \ref{sec:design:test:metrics}.
+
+We note that metrics describing pipeline execution may be considered in two seaprate --- but related --- contexts.
+In some cases, we care simply about the absolute value of some metric value: is the performance ``good enough''?
+Does it satisfy a requirement?
+In other circumstances, we might wish to keep track of a metric value as a time series: does performance change with time?
+Can we identify changesets which have introduced regressions (or improvements!)?
+
+We note further that metrics values might be calculated in a number of different contexts.
+For example:
+
+\begin{itemize}
+
+  \item{Some metrics refer to characteristics of pipeline execution, like execution time, which \emph{by definition} must be recorded during execution or they are lost\footnote{Of course, it is not a requirement that they by recorded by a dedicated metric tracking system; one could imagine recording execution time by simply recording a log message, and then later parsing log outputs to retrieve it}.}
+
+  \item{Others may only be calculated from intermediate data products, which would not normally be stored for posterity. These must be calculated before those intermediate products are removed.}
+
+  \item{Finally, some are calculated from final science data products, and hence may be calculated at any time after pipeline execution.}
+
+\end{itemize}
+
+\subsubsection{Defining, calculating and collecting metrics}
+\label{sec:comp:metric:collect}
+
+The author of pipeline code can, of course, simply print to screen (or to log) a message containing some quantity that they have calculated on the fly during the execution of their code.
+This is low overhead and trivial to implement.
+It may be combined with the debugging system (\S\ref{sec:comp:debug}) to provide a rich set of diagnostics when the code is executing.
+We suggest that there is no advantage to attempting to force some new framework onto developers operating in this mode.
+
+However, at the level of long-term monitoring of pipeline performance, and especially at the level of requirements verification, we suggest that having a standardized, code-based definition of metrics is essential to enable clear and unambiguous comparison of results.
+The SQuaRE team has developed the \texttt{lsst.verify.metrics}\footnote{\url{https://github.com/lsst/verify_metrics}} package to facilitiate the centralised definition of metrics, which we regard as a key step in the right direction.
+
+\begin{recommendation}
+    {rec:comp:metric:collect:verifymetrics}
+    {Formalise the \texttt{lsst.verify.metrics} package as the source of truth for metric definitions, by e.g. describing it in \citeds{LDM-503} and \citeds{LDM-639}.}
+\end{recommendation}
+
+The SQuaRE team has also developed the \texttt{lsst.verify} package which enables the convenient packaging of metric values and submission to SQuaSH, the metric tracking dashboard (\S\ref{sec:comp:metric:dashboard}).
+
+We have some concerns that adoption of this system has been slow.
+In part, that might be due to it being developed relatively independently of ongoing work on the Science Pipelines and without substantial external input to or review of the design.
+However, we believe that there are a small number of concrete steps which can be taken to address this.
+
+\begin{recommendation}
+    {rec:comp:metric:collect:verifydocs}
+    {Provide a single, reliable set of documentation describing the metric definition and collection system}
+    In particular, mentions of old, obsolete packages\footnote{e.g. \texttt{lsst.validate.base}} should be expunged, and a clear set of introductory documentation should be provided which does not refer to informal technotes describing vaguely-specified design goals (\citeds{SQR-017, SQR-019}).
+    In the process of developing this documentation, work closely with a named stakeholder in the Pipelines group to ensure that their needs are being adequately met; some redesign of existing code may be necessary.
+\end{recommendation}
+
+\begin{recommendation}
+    {rec:comp:metric:collect:verifypipe}
+    {Develop clear guidelines for integrating metric collection with pipeline code}
+    \citeds{DMTN-057} suggested a number of ways in which this might be done, but indecision has caused paralysis.
+    The onus is on the Pipelines group to adopt one of these approaches (or develop an alternative)\footnote{Note \jira{DM-16016} in this context.}.
+\end{recommendation}
+
+\begin{recommendation}
+    {rec:comp:metric:collect:adopt}
+    {Pipelines leadership should start using the metric definition and collection system.}
+    As the above recommendations are met, this system will be usable.
+    However, driving adoption will require proactive measures from pipelines Product Owners and T/CAMs.
+\end{recommendation}
+
+\subsubsection{Metric tracking dashboard}
+\label{sec:comp:metric:dashboard}
+
+To date, SQuaSH has been used to follow a subset of KPMs computed by validate\_drp for tracking performance regressions due to pipeline changes by regularly reprocessing test datasets in Jenkins/CI.
+
+The following recommendations would enhance SQuaSH capabilities for DM developers.
+
+\begin{recommendation}
+    {rec:squash:use}
+    {SQuaSH should be used by developers for tracking metrics on their particular projects}
+\end{recommendation}
+
+Developers can instrument their science pipeline Tasks using \texttt{lsst.verify} and create new verification packages to be tracked in SQuaSH (see e.g. \texttt{jointcal}). It would be interesting to send results to SQuaSH when testing development branches, so that developers can compare the new metric values with the previous values \textit{before} merging to master. Any metric defined in \texttt{lsst.verify.metrics} should be uploaded to SQuaSH including, for example, computational metrics like code execution time.
+
+\begin{recommendation}
+    {rec:squash:regression}
+    {SQuaSH should provide automated notification of regressions}
+\end{recommendation}
+
+Metric specifications in \texttt{lsst.verify} include thresholds that can be used to automatically detect and notify regressions. The notifications could be presented to developers by Slack, for example.
+
+\begin{recommendation}
+    {rec:squash:summary}
+    {SQuaSH should provide a metric summary display}
+\end{recommendation}
+
+Verification packages might have specialized visualizations for displaying metric summary information in addition to the current time series plot. DM developers should be able to extend SQuaSH by creating new visualizations following developer documentation provided in the SQuaSH Documentation (https://squash.lsst.io/)
+
+\begin{recommendation}
+    {rec:squash:ldf}
+    {SQuaSH should support the LDF execution environment in addition to Jenkins/CI}
+\end{recommendation}
+
+Pipeline runs on larger datasets (e.g. HSC RC2 weekly reprocessing) require more computation than can be provided in the Jenkins/CI environment. SQuaSH should be flexible to support other environments like the LDF environment.
+
+\begin{recommendation}
+    {rec:squash:dataId}
+    {SQuaSH should be able to store and display metric values per DataId}
+For example, CCD, visit, patch, tract, filter.
+\end{recommendation}
+
+Pipeline runs on larger datasets (e.g. HSC RC2 weekly reprocessing) also require to store and display metric values per \texttt{DataIds} as opposed to the entire dataset (e.g. test datasets in Jenkins/CI). The ability to identify metric values per filter name or spatially by CCD in a visit or per patch in a tract, would enhance SQuaSH display and monitoring capabilities, turning SQuaSH or its successor into a richer metric dashboard (see also \S\ref{sec:design:drill}).

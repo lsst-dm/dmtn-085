@@ -62,6 +62,7 @@ except insofar as we urge that QA tasks should be implemented and kept up to
 date with these new frameworks as they become available.
 
 \subsubsection{Metric and Performance Tracking}
+\label{sec:design:test:metrics}
 
 DM already has a metric-tracking system based on \gls{squash}. This
 effectively tracks the time evolution of a number of \glspl{aggregate metric}
@@ -75,13 +76,13 @@ being undertaken.
 We therefore propose a series of updates and refinements to \gls{squash},
 focusing on a series of modest enhancements to its capabilities to alert DM
 developers and management to regressions (or improvements) in selected
-performance metrics. These are developed in \S\ref{sec:comp:squash}.
+performance metrics. These are developed in \S\ref{sec:comp:metric:dashboard}.
 
 The primary means by which data is submitted to \gls{squash} is through the
-\href{lsst.verify}{https://github.com/lsst/verify} framework and associated
+\href{https://github.com/lsst/verify}{lsst.verify} framework and associated
 metric definitions. The mechanisms by which this framework is integrated with
 the Science Pipelines are unclear (refer to \citeds{DMTN-057} for a
 discussion) and it has never undergone a design review or acceptance process.
 Clearer ownership and direction for this part of the system are essential to
 drive adoption. We discuss this in more detail and provide suggestions in
-\S\ref{sec:comp:verify}.
+\S\ref{sec:comp:metric:collect}.
