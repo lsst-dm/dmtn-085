@@ -22,7 +22,66 @@ For example:
 
 \end{itemize}
 
-\subsubsection{Defining, calculating and collecting metrics}
+\subsubsection{Metric definition and calculation}
+\label{sec:comp:metric:define}
+
+\begin{recommendation}
+    {rec:metric_computation}
+    {The computation, selection, and aggregation steps that define a metric should be well compartmentalized}
+\end{recommendation}
+
+Many metrics are defined as statistical aggregates of a per-source computed quantity over a defined selection of sources.
+In order to enable a low-latency drill-down workflow and analyst flexibility, we recommend that for such metrics, the per-source computations be calculated and stored for \emph{all} sources, and that the selection and aggregation steps be logically seperate.
+This might be implemented, for example, by giving a \texttt{Metric} object separate \texttt{.compute()}, \texttt{.select()} and \texttt{.aggregate()} methods.
+For metrics computed in this way, the maximum storage granularity should be considered to be at the source level.
+
+Other metrics may not be well-defined at the source level, such as the slope of the stellar locus in a given color-color space, or other similar metrics that require fitting a model to many sources at once.
+Such metrics cannot follow this same \texttt{.compute()}--\texttt{.select()}--\texttt{.aggregate()} model, and will have a different maximum granularity (e.g., patch, tract, ccd, visit, or dataset).
+This maximum granularity should be explictly defined in the definition of the metric.
+
+\begin{recommendation}
+    {rec:metric_values}
+    {Metric values should be stored with full granularity (source, CCD, patch, dataset)}
+\end{recommendation}
+
+Re-running pipelines to recompute metrics imposes a significant overhead to the analyst.
+We therefore recommend that in general all computed metric values should be stored on disk at the highest relevant granularity.
+In some cases these are per-source (e.g., source FWHM or shape measurements) and may be included in the relevant object catalogs or in postprocessed tables; in others, the minimum granularity may be at the CCD, patch, or even dataset levels (\S \ref{rec:metric_computation}).
+This procedure provides the analyst the ability to filter metric values using arbitrary metadata (night, airmass, focal plane position, moon phase...) and re-aggregate to any level desired with any aggregation function (mean, median, percentiles, standard deviation, outliers...).
+Supplemental storage of higher-level aggregates (e.g., mean FWHM by CCD) is discouraged because of duplication and loss of information, except where speed of visualization of \emph{key} quantities would be impaired due to the need to load large datasets.
+
+
+\begin{recommendation}
+    {rec:metric_tidy}
+    {Metric values should be stored as ``tidy data'' in columnar data stores (e.g., Parquet) as part an output data repository}
+In particular, this should make it possible to load the data quickly enough for interactive work on $\sim$100s of tracts.
+\end{recommendation}
+
+``Tidy data'' \citep{JSSv059i10} is recommended as a best practice for data analysis workflows, as it simplifies filter-groupby-aggregate workflows.
+
+We expect that most analysts will be primarily interested in all values of a handful of metric columns at once, which suggests a column-store format will be optimal.
+The potentially large number of metrics and metric values argues for storage on-disk with the output repository itself.
+This isolation also facilitates ad-hoc processing \& QA workflows by individual analysts.
+We also recommend a centralized system for tracking performance regressions at a high level (\S \ref{sec:regression}).
+
+Additionally, we also note that in order for interactive tools to be useful for visualizing results of large data repositories, the persistence model must allow for loading and aggregating metric values at the scale of 10s to 100s of tracts with low latency.
+For example, if parquet files are used to store tables of metric values, it would be preferable for such tables to be stored at the per-tract level instead of the per-patch level, to minimize lots of I/O of small files when loading multiple tracts of data at once.
+
+
+\begin{recommendation}
+    {rec:metric_dataId}
+    {Metric values should have Butler dataIds}
+\end{recommendation}
+
+In order to facilitate joining and filtering metric values by other metadata, metric values should have appropriate Butler dataIds.
+
+\begin{recommendation}
+    {rec:metric_butler}
+    {It should be possible to use the Butler to persist and retrieve metric values}
+\end{recommendation}
+
+
+\subsubsection{Collecting metrics}
 \label{sec:comp:metric:collect}
 
 The author of pipeline code can, of course, simply print to screen (or to log) a message containing some quantity that they have calculated on the fly during the execution of their code.
