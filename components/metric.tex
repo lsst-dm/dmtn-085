@@ -68,42 +68,55 @@ However, we believe that there are a small number of concrete steps which can be
 \subsubsection{Metric tracking dashboard}
 \label{sec:comp:metric:dashboard}
 
-To date, SQuaSH has been used to follow a subset of KPMs computed by validate\_drp for tracking performance regressions due to pipeline changes by regularly reprocessing test datasets in Jenkins/CI.
+The \gls{squash} system, \citeds{SQR-009}, has been developed by the SQuaRE team to provide ``\gls{dashboard}'' functionality for metric tracking.
+At its core, SQuaSH provides a database to which metric values may be submitted using the \texttt{lsst.verify} (\S\ref{sec:comp:metric:collect}) system, and a web-based service for displaying metric values as a time series.
+This enables the user to track the evolution of metric values with time, and relate them directly to changes in code or configuration.
+SQuaSH has also been designed to provide some limited ``drill-down'' functionality to explore the way in which high-level metrics have been calculated.
 
-The following recommendations would enhance SQuaSH capabilities for DM developers.
+To date, SQuaSH has been used to follow a set of metrics derived from high-level LSST requirements and codified in the validate\_drp package.
+It has been designed, though, to enable use by individual developers to track metrics which are of interest only to them, or relevant a particular subset of the codebase on which they are working.
 
-\begin{recommendation}
-    {rec:squash:use}
-    {SQuaSH should be used by developers for tracking metrics on their particular projects}
-\end{recommendation}
-
-Developers can instrument their science pipeline Tasks using \texttt{lsst.verify} and create new verification packages to be tracked in SQuaSH (see e.g. \texttt{jointcal}). It would be interesting to send results to SQuaSH when testing development branches, so that developers can compare the new metric values with the previous values \textit{before} merging to master. Any metric defined in \texttt{lsst.verify.metrics} should be uploaded to SQuaSH including, for example, computational metrics like code execution time.
-
-\begin{recommendation}
-    {rec:squash:regression}
-    {SQuaSH should provide automated notification of regressions}
-\end{recommendation}
-
-Metric specifications in \texttt{lsst.verify} include thresholds that can be used to automatically detect and notify regressions. The notifications could be presented to developers by Slack, for example.
+The Working Group feels that the major value in the SQuaSH system is in tracking and responding to regressions in performance (be they scientific or run-time) as the code changes.
+In this respect, it is in some ways analagous to the \gls{ci} system (\S\ref{sec:comp:ci}), and benefits from many of the same recommendations.
 
 \begin{recommendation}
-    {rec:squash:summary}
-    {SQuaSH should provide a metric summary display}
+    {rec:comp:metric:dashboard:alert}
+    {SQuaSH should issue alerts to developers and key stakeholders on regressions in important metric values}
+    Key stakeholders should include:
+    \begin{itemize}
+      \item{Senior DM management (DM Project Manager, DM Subsystem Scientist, Pipelines Scientist, Science Pipelines T/CAMs and Science Leads);}
+      \item{The developer who casued the regression, if it is possible to identify them (e.g. through commit logs).}
+    \end{itemize}
+    This will require careful design, as it may be in tension with the desire to enable developers to define arbitrary metrics for their own use: clearly, key stakeholders will not wish to be informed of every developed-defined metric which suffers a regression.
+    We suggest that, for example, a ``subscription list'' for each metric be defined, and the key stakeholders automatically be added to it for all metrics deriving directly from high-level requirements.
 \end{recommendation}
 
-Verification packages might have specialized visualizations for displaying metric summary information in addition to the current time series plot. DM developers should be able to extend SQuaSH by creating new visualizations following developer documentation provided in the SQuaSH Documentation (https://squash.lsst.io/)
+As with \texttt{lsst.verify}, we worry that there is confusion about how to distinguish metric values measured on different versions of the codebase, configurations, datasets, etc within the SQuaSH system.
+For example, it is possible to define and track a metric on an algorithm implemented by code in the \texttt{lsst.pipe.tasks} package.
+But that code may be run in multiple different contexts: as part of alert production, data release production, precovery, etc: how does SQuaSH distinguish between all of these environments?
+We believe that SQuaSH is capable of this, but existing ``big picture'' documentation is lacking and hard to follow.
 
 \begin{recommendation}
-    {rec:squash:ldf}
-    {SQuaSH should support the LDF execution environment in addition to Jenkins/CI}
+  {rec:comp:metric:dashboard:docs}
+  {Provide a single, reliable source of documentation describing the SQuaSH system and a vision for its use in DM-wide metric tracking}
 \end{recommendation}
 
-Pipeline runs on larger datasets (e.g. HSC RC2 weekly reprocessing) require more computation than can be provided in the Jenkins/CI environment. SQuaSH should be flexible to support other environments like the LDF environment.
+We note that SQuaSH provides some drill-down capability to explore the source of metric values.
+We suggest that this should not be the core business of SQuaSH, and prefer to consider a separate drill-down environment (\S\ref{sec:comp:drill}); further development of these capabilities within squash should not be prioritised.
+
+We recognize that developers may wish to submit results to SQuaSH from a variety of systems.
+In particular, it must not be dependent upon a particular expection environment (e.g. Jenkins).
+
+\begin{recommendation}
+    {rec:comp:metric:dashboard:agnostic}
+    {It must be possible to submit metrics to SQuaSH from arbitrary pipeline execution environments}
+\end{recommendation}
+
+When handle large datasets, there is value to tracking metric values computed over subsets of the whole.
+For example, it may be more relevant to track how photometric repeatability varies over some patch, rather than over the whole sky.
 
 \begin{recommendation}
     {rec:squash:dataId}
     {SQuaSH should be able to store and display metric values per DataId}
-For example, CCD, visit, patch, tract, filter.
+    For example, CCD, visit, patch, tract, filter.
 \end{recommendation}
-
-Pipeline runs on larger datasets (e.g. HSC RC2 weekly reprocessing) also require to store and display metric values per \texttt{DataIds} as opposed to the entire dataset (e.g. test datasets in Jenkins/CI). The ability to identify metric values per filter name or spatially by CCD in a visit or per patch in a tract, would enhance SQuaSH display and monitoring capabilities, turning SQuaSH or its successor into a richer metric dashboard (see also \S\ref{sec:design:drill}).
