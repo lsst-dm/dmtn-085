@@ -50,16 +50,6 @@ and suggest that history drives us to err on the side of simplicity.
     enabled with a statement like \texttt{if self.config.debug: ...}.
 \end{recommendation}
 
-\begin{note}
-As of 2018-08-21, I (JDS) have removed references to enabling debugging
-through the task config system. This is based on OOB discussions that the
-config is most appropriate for recording options which affect the science
-outputs, whereas (one assumes) that the code should generate the same science
-results whether or not debugging is enabled. I think that means it really
-wants to be driven by a command line argument and a set of explicit arguments,
-but I am happy to be persuaded otherwise.
-\end{note}
-
 The natural consequence of this is that debugging of tasks involved by some
 form of middleware (e.g. \texttt{CmdLineTask}, \texttt{PipelineTask} called by
 an executor) should receive an explicit argument enabling debugging. All other
