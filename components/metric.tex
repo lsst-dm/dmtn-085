@@ -56,7 +56,7 @@ For metrics computed in this way, the maximum storage granularity should be cons
 \end{recommendation}
 
 Other metrics may not be well-defined at the source level, such as the slope of the stellar locus in a given color-color space, or other similar metrics that require fitting a model to many sources at once.
-Such metrics cannot follow this same \texttt{.compute()}--\texttt{.select()}--\texttt{.aggregate()} model, and will have a different maximum granularity (e.g., patch, tract, CCD, visit, or dataset).
+Such metrics cannot follow this same compute--select--aggregate model, and will have a different maximum granularity (e.g., patch, tract, CCD, visit, or dataset).
 This maximum granularity should be explictly defined in the definition of the metric.
 
 \begin{recommendation}
@@ -96,9 +96,13 @@ In order to facilitate joining and filtering metric values by other metadata, me
     {Metric values should have Butler dataIds}
 \end{recommendation}
 
+As discussed in \S{sec:comp:metric}, the appropriate time to calculate a metric value may depend on the nature of the metric.
+Some are calculated and stored in real-time as pipeline execution continues; others may be handled by ``afterburner'' analysis of existing data repositories.
+In either case, we suggest that close integration with the Data Butler is essential, and we believe the scheme presented here is compatible with the design of the ``Generation Three'' Butler.
+
 \begin{recommendation}
     {rec:sec:comp:metric:define:butler}
-    {It should be possible to use the Butler to persist and retrieve metric values}
+    {It should be possible to use the Data Butler to persist and retrieve metric values}
 \end{recommendation}
 
 \subsubsection{Collecting metrics}
@@ -124,7 +128,7 @@ However, we believe that there are a small number of concrete steps which can be
     However, driving adoption will require proactive measures from pipelines Product Owners and T/CAMs.
 \end{recommendation}
 
-\subsubsection{Metric tracking dashboard}
+\subsubsection{Metric tracking: dashboard and alerts}
 \label{sec:comp:metric:dashboard}
 
 The \gls{squash} system, \citeds{SQR-009}, has been developed by the SQuaRE team to provide ``\gls{dashboard}'' functionality for metric tracking.
@@ -161,7 +165,13 @@ We believe that SQuaSH is capable of this, but existing ``big picture'' document
 \end{recommendation}
 
 We note that SQuaSH provides some drill-down capability to explore the source of metric values.
-We suggest that this should not be the core business of SQuaSH, and prefer to consider a separate drill-down environment (\S\ref{sec:comp:drill}); further development of these capabilities within squash should not be prioritised.
+We suggest that this should not be the core business of SQuaSH, and prefer to consider a separate drill-down environment (\S\ref{sec:comp:drill}); further development of these capabilities within SQuaSH should not be prioritised.
+However, if the metric submission system captures appropriate information, it would be possible to enable SQuaSH to automatically spawn a copy of the drill-down system pointing at the repository corresponding to a particular metric value submission.
+
+\begin{recommendation}
+  {rec:comp:metric:dashboard:spawn}
+  {The SQuaSH system should be closely coupled to the drill-down environment; in particular, the former should use the latter to enable drill-down functionality into particular metric values.}
+\end{recommendation}
 
 We recognize that developers may wish to submit results to SQuaSH from a variety of systems.
 In particular, it must not be dependent upon a particular expection environment (e.g. Jenkins).

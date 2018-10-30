@@ -2,30 +2,56 @@
 \label{sec:comp:drill}
 
 Currently, pipeline developers rely on a variety of ad-hoc visualization tools and custom workflows to debug processing problems and investigate the effects of new algorithms.
-The QAWG recommends development of a browser-based dashboard QA system that is designed to cater to the workflow of the debugging developer, and is informed and guided by current usage of existing tools (e.g. \texttt{pipe\char`_analysis} and \texttt{qa\char`_explorer}).
+The QAWG recommends development of a browser-based dashboard QA system that is designed to cater to the workflow of the debugging developer, and is informed and guided by current usage of existing tools (e.g. \texttt{pipe\_analysis} and \texttt{qa\_explorer}).
 This is separate from, and in addition to, the SQuaSH dashboard (\S \ref{sec:comp:metric:dashboard}).
 
 \begin{recommendation}
-    {rec:dashboard}
-    {The QA system should supply a browser-based interactive dashboard that can run on any pipeline output repository (or comparison of two repositories) to quickly diagnose the quality of the data processing}
-This dashboard should have two levels of detail: a high-level dashboard summarizing top-level global metrics, and and a metric dashboard showing more information on a selected metric (or set of metrics).  The more detailed metric dashboard should be able to explore both coadds and inidivual visits.
+  {rec:comp:drill:dashboard}
+  {DM should develop a browser-based interactive dashboard that can run on any pipeline output repository (or comparison of two repositories) to quickly diagnose the quality of the data processing}
+  This dashboard should have two levels of detail: a high-level summary of top-level global metrics (Fig. \ref{fig:comp:drill:quick}), and and a metric view showing more information on a selected metric (or set of metrics; Fig. \ref{fig:comp:drill:metric}).
+  The more detailed metric dashboard should be able to explore both coadds and individual visits.
 \end{recommendation}
 
-A developer should be able to navigate a web browser to a URL, enter the path to a data repository at the LDF on which a metric-computing postprocessing task has been run (e.g., on-disk at NCSA in \texttt{\textbackslash scratch} or \texttt{\textbackslash project}), and see an dashboard summarizing the data processing.
-In addition to computing and persisting the values of these metrics, this task also will have persisted enough information about the metric computations such that the dashboard can read the following from the repository:
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{figures/quickLook.png}
+  \end{center}
+  \caption{
+    Mock-up of the ``quick look'' overview screen of the drill-down system.
+    This provides a summary of all metrics calculated over the results of a particular pipeline execution, indicating any that fell below threshold.
+  }
+  \label{fig:comp:drill:quick}
+\end{figure}
+
+A developer will load the dashboard by visiting a particular URL.
+They will then enter the path to a data repository\footnote{On some accessible filesystem; this assumes that the QA system is running e.g. on a host at the LSST Data Facility with access to \texttt{/scratch} or \texttt{/project}} which contains metric values.
+They will be presented with the ``quick look'' screen as shown in Fig. \ref{fig:comp:drill:quick} which summarises the results of the data processing.
+
+The dashboard will generate summary information on the fly by introspecting the repository.
+It follows that, in addition to the metric values themselves, the repository will also contain metadata that describes:
 \begin{itemize}
-    \item Which metrics were computed?
-    \item What selection was done on the source catalog to compute each metric?
-    \item What is an acceptable value for each metric for this particular data set?
+    \item{Which metrics were computed?}
+    \item{What selection was done on the source catalog to compute each metric?}
+    \item{What is an acceptable value for each metric for this particular data set?}
 \end{itemize}
-The developer should have a choice to explore either the metrics in a single repository, or the differences in metrics between two data repositories by entring a ``comparison repository'' in addition to the primary one (that necessarily would need to have the same metrics computed as the primary).
+The developer will have a choice to explore either the metrics in a single repository, or the differences in metrics between two data repositories by entring a ``comparison repository'' in addition to the primary one (that necessarily would need to have the same metrics computed as the primary).
 
 The high-level landing page of this dashboard should allow for at-a-glance summary of the data and identification of any problems.
 The overall data summary could be in a header displaying the some numbers of interest, such as number of tracts, numbers of visits per filter, total numbers of sources, etc.
 At-a-glance identification of problems could be accomplished by displaying fully-rolled-up metric summary values in a minimalistic but informative format, such as an array of color-coded buttons or a color-coded table (e.g., green for good, red for bad).
 This top-level dashboard page should also have minimal but useful visualizations, such as an RA/dec plot of a single metric value (perhaps switchable via drop-down menu).
 
-Clicking on any metric from the top-level page should load up a coadd metric-detail dashboard, which should allow for more detailed exploration of an individual metric.
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{figures/metricView.png}
+  \end{center}
+  \caption{
+    Mock-up of the ``metric view'' showing more information on how a particular metric value was calculated.
+  }
+  \label{fig:comp:drill:metric}
+\end{figure}
+
+Selecting any metric from the top-level page should load up a metric-detail page, as shown in Fig. \ref{fig:comp:drill:metric}, which should allow for more detailed exploration of an individual metric.
 The layout and function of this page will depend on the type of metric.
 As an example, for metrics derived directly from individual source measurements, it might display a scatter plot of the metric values vs. source magnitude, as well as an RA/Dec scatter plot colormapped by metric value.
 This could by default show the data for all tracts, but tract-aggregated information could be available for each tract on hovering over the sky map.
@@ -35,12 +61,11 @@ Similarly, from here, clicking on a patch would load up just the data in that pa
 This metric dashboard should also allow simulataneous visualization of different metrics, to allow cross-filtering.
 This might be accomplished, for example, by having a sidebar listing the metrics, and being able to use it to either switch between metrics or to select multiple metrics.
 
-There should be an analogous drill-down mode for exploring visit-level data, with the drill-down levels being visit->ccd rather than tract->patch.
+There should be an analogous drill-down mode for exploring visit-level data, with the drill-down levels being visit$\rightarrow$CCD rather than tract$\rightarrow$patch.
 There should be seamless integration between coadd and visit mode, to match the typical workflow of a debugging developer, who will first see that there is a problem with a particular metric in a particular tract at the coadd processing level, and then will want to see what visits went into that coadd tract.
 To enable this, from the ``coadd mode'' metric dashboard, there could be a way to toggle on/off visit outlines, and to jump to ``visit mode'' for a selected visit.
 In ``visit mode,'' in addition to the scatter/sky plots that ``coadd mode'' has, there could be an additional figure showing the aggregated metric value as a function of visit number, where outlier visits would be clearly visible.
 This system would enable a developer to quickly identify bad visits for a particular metric, in just a few clicks.
-
 
 \begin{recommendation}
     {rec:dashboard:jupyter}
@@ -48,25 +73,3 @@ This system would enable a developer to quickly identify bad visits for a partic
 \end{recommendation}
 
 From the metric dashboard, there could be an ``explore in Jupyter'' button that would load up the dataset in the Jupyterlab environment, which would provide all the tools to make the dashboard visualizations, with the additional flexibility for ad-hoc exploration that the notebook provides.
-
-
-\subsubsection{Automated regression testing} \label{sec:regression}
-
-
-\begin{recommendation}
-    {rec:metric:aggregationservice}
-    {A centralized service should store and plot high-level aggregations of key performance metrics on several datasets that are regularly reprocessed in order to identify performance regressions or improvements due to pipeline changes}
-\end{recommendation}
-
-
-This is essentially the SQuaSH system, discussed in more detail in \ref{sec:comp:metric:dashboard}.
-The high-level aggregates that SQuaSH uses may be constructed and submitted by an afterburner task that uses the per-repository metric storage.
-
-\begin{recommendation}
-    {rec:metric:oneclick}
-    {An analyst should be able to start an interactive drill-down session exploring the output repository in question in ``one click'' from any given aggregate displayed by the SQuaSH system}
-\end{recommendation}
-
-This defines the relationship between the QA dashboard and SQuaSH.
-The QA dashboard can point to any data repository on disk in which metrics have been calculated, and does not have to relate to the centralized SQuaSH system in any way.
-But a developer must be able to access this dashboard in two equivalent ways: either by navigating straight to the dashboard URL and entering the path to a repository, or by beginning at the SQuaSH dashboard, and clicking on a point representing a given pipeline run.
