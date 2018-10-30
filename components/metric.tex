@@ -25,90 +25,90 @@ For example:
 \subsubsection{Metric definition and calculation}
 \label{sec:comp:metric:define}
 
-\begin{recommendation}
-    {rec:metric_computation}
-    {The computation, selection, and aggregation steps that define a metric should be well compartmentalized}
-\end{recommendation}
-
-Many metrics are defined as statistical aggregates of a per-source computed quantity over a defined selection of sources.
-In order to enable a low-latency drill-down workflow and analyst flexibility, we recommend that for such metrics, the per-source computations be calculated and stored for \emph{all} sources, and that the selection and aggregation steps be logically seperate.
-This might be implemented, for example, by giving a \texttt{Metric} object separate \texttt{.compute()}, \texttt{.select()} and \texttt{.aggregate()} methods.
-For metrics computed in this way, the maximum storage granularity should be considered to be at the source level.
-
-Other metrics may not be well-defined at the source level, such as the slope of the stellar locus in a given color-color space, or other similar metrics that require fitting a model to many sources at once.
-Such metrics cannot follow this same \texttt{.compute()}--\texttt{.select()}--\texttt{.aggregate()} model, and will have a different maximum granularity (e.g., patch, tract, ccd, visit, or dataset).
-This maximum granularity should be explictly defined in the definition of the metric.
-
-\begin{recommendation}
-    {rec:metric_values}
-    {Metric values should be stored with full granularity (source, CCD, patch, dataset)}
-\end{recommendation}
-
-Re-running pipelines to recompute metrics imposes a significant overhead to the analyst.
-We therefore recommend that in general all computed metric values should be stored on disk at the highest relevant granularity.
-In some cases these are per-source (e.g., source FWHM or shape measurements) and may be included in the relevant object catalogs or in postprocessed tables; in others, the minimum granularity may be at the CCD, patch, or even dataset levels (\S \ref{rec:metric_computation}).
-This procedure provides the analyst the ability to filter metric values using arbitrary metadata (night, airmass, focal plane position, moon phase...) and re-aggregate to any level desired with any aggregation function (mean, median, percentiles, standard deviation, outliers...).
-Supplemental storage of higher-level aggregates (e.g., mean FWHM by CCD) is discouraged because of duplication and loss of information, except where speed of visualization of \emph{key} quantities would be impaired due to the need to load large datasets.
-
-
-\begin{recommendation}
-    {rec:metric_tidy}
-    {Metric values should be stored as ``tidy data'' in columnar data stores (e.g., Parquet) as part an output data repository}
-In particular, this should make it possible to load the data quickly enough for interactive work on $\sim$100s of tracts.
-\end{recommendation}
-
-``Tidy data'' \citep{JSSv059i10} is recommended as a best practice for data analysis workflows, as it simplifies filter-groupby-aggregate workflows.
-
-We expect that most analysts will be primarily interested in all values of a handful of metric columns at once, which suggests a column-store format will be optimal.
-The potentially large number of metrics and metric values argues for storage on-disk with the output repository itself.
-This isolation also facilitates ad-hoc processing \& QA workflows by individual analysts.
-We also recommend a centralized system for tracking performance regressions at a high level (\S \ref{sec:regression}).
-
-Additionally, we also note that in order for interactive tools to be useful for visualizing results of large data repositories, the persistence model must allow for loading and aggregating metric values at the scale of 10s to 100s of tracts with low latency.
-For example, if parquet files are used to store tables of metric values, it would be preferable for such tables to be stored at the per-tract level instead of the per-patch level, to minimize lots of I/O of small files when loading multiple tracts of data at once.
-
-
-\begin{recommendation}
-    {rec:metric_dataId}
-    {Metric values should have Butler dataIds}
-\end{recommendation}
-
-In order to facilitate joining and filtering metric values by other metadata, metric values should have appropriate Butler dataIds.
-
-\begin{recommendation}
-    {rec:metric_butler}
-    {It should be possible to use the Butler to persist and retrieve metric values}
-\end{recommendation}
-
-
-\subsubsection{Collecting metrics}
-\label{sec:comp:metric:collect}
-
 The author of pipeline code can, of course, simply print to screen (or to log) a message containing some quantity that they have calculated on the fly during the execution of their code.
 This is low overhead and trivial to implement.
 It may be combined with the debugging system (\S\ref{sec:comp:debug}) to provide a rich set of diagnostics when the code is executing.
 We suggest that there is no advantage to attempting to force some new framework onto developers operating in this mode.
 
 However, at the level of long-term monitoring of pipeline performance, and especially at the level of requirements verification, we suggest that having a standardized, code-based definition of metrics is essential to enable clear and unambiguous comparison of results.
-The SQuaRE team has developed the \texttt{lsst.verify.metrics}\footnote{\url{https://github.com/lsst/verify_metrics}} package to facilitiate the centralised definition of metrics, which we regard as a key step in the right direction.
+The SQuaRE team has developed the \texttt{lsst.verify.metrics}\footnote{\url{https://github.com/lsst/verify_metrics}} system to facilitiate the centralised definition of metrics, which we regard as a key step in the right direction.
 
 \begin{recommendation}
-    {rec:comp:metric:collect:verifymetrics}
-    {Formalise the \texttt{lsst.verify.metrics} package as the source of truth for metric definitions, by e.g. describing it in \citeds{LDM-503} and \citeds{LDM-639}.}
+    {rec:comp:metric:define:verifymetrics}
+    {Formalise the \texttt{lsst.verify.metrics} system as the source of truth for metric definitions, by e.g. describing it in \citeds{LDM-503} and \citeds{LDM-639}}
+    This should be taken as a blanket endorsement of the current implementation of this system; \S\ref{sec:comp:metric:define} proides a number of recommendations as to the way that metrics are defined.
 \end{recommendation}
+
+\begin{recommendation}
+    {rec:comp:metric:define:docs}
+    {Provide a single, reliable set of documentation describing the metric definition system}
+    In particular, mentions of old, obsolete packages\footnote{e.g. \texttt{lsst.validate.base}} should be expunged, and a clear set of introductory documentation should be provided which does not refer to informal technotes describing vaguely-specified design goals (\citeds{SQR-017, SQR-019}).
+    In the process of developing this documentation, work closely with a named stakeholder in the Pipelines group to ensure that their needs are being adequately met; redesign of existing code may be necessary.
+\end{recommendation}
+
+Many metrics are defined as statistical aggregates of a per-source computed quantity --- for example, FWHM or shape --- over a defined selection of sources.
+In order to enable a low-latency drill-down workflow and analyst flexibility, we recommend that for such metrics, the per-source computations be calculated and stored for \emph{all} sources, and that the selection and aggregation steps be logically seperate.
+For metrics computed in this way, the maximum storage granularity should be considered to be at the source level.
+
+\begin{recommendation}
+    {rec:comp:metric:define:compute}
+    {The computation, selection, and aggregation steps that define a metric should be well compartmentalized}
+\end{recommendation}
+
+Other metrics may not be well-defined at the source level, such as the slope of the stellar locus in a given color-color space, or other similar metrics that require fitting a model to many sources at once.
+Such metrics cannot follow this same \texttt{.compute()}--\texttt{.select()}--\texttt{.aggregate()} model, and will have a different maximum granularity (e.g., patch, tract, CCD, visit, or dataset).
+This maximum granularity should be explictly defined in the definition of the metric.
+
+\begin{recommendation}
+    {rec:sec:comp:metric:define:granularity}
+    {Metric values should be stored with full granularity (source, CCD, patch, dataset)}
+\end{recommendation}
+
+Re-running pipelines to recompute metrics imposes a significant overhead to the analyst.
+We therefore recommend that in general all computed metric values should be stored on disk at the highest relevant granularity.
+In some cases these are per-source and may be included in the relevant object catalogs or in postprocessed tables; in others, the minimum granularity may be at the CCD, patch, or even dataset levels.
+This procedure provides the analyst the ability to filter metric values using arbitrary metadata (night, airmass, focal plane position, moon phase, etc) and re-aggregate to any level desired with any aggregation function (mean, median, percentiles, standard deviation, outliers, etc).
+Supplemental storage of higher-level aggregates (e.g., mean FWHM by CCD) is discouraged because of duplication and loss of information, except where speed of visualization of \emph{key} quantities would be impaired due to the need to load large datasets.
+
+We note that this procedure will result in a substantial increase in catalog volume.
+We suggest that metric value storage therefore be configurable through the regular pipeline configuration system.
+When working independently, developers may enable or disable at will depending on their use case; when running integration or other formalized tests, metrics will be stored for later analysis; metric storage when performing alert or data release processing is an operational decision.
+
+``\Gls{tidy data}'' is recommended as a best practice for data analysis workflows, as it simplifies filter-groupby-aggregate workflows.
+
+We expect that most analysts will be primarily interested in all values of a handful of metric columns at once, which suggests a column-store format will be optimal.
+The potentially large number of metrics and metric values argues for storage on-disk with the output repository itself.
+This isolation also facilitates ad-hoc processing \& QA workflows by individual analysts.
+
+\begin{recommendation}
+    {rec:sec:comp:metric:define:tidy}
+    {Metric values should be stored as ``tidy data'' in columnar data stores (e.g., \gls{parquet}) as part an output data repository}
+In particular, this should make it possible to load the data quickly enough for interactive work on $\sim$100s of tracts.
+\end{recommendation}
+
+Additionally, we also note that in order for interactive tools to be useful for visualizing results of large data repositories, the persistence model must allow for loading and aggregating metric values at the scale of tens to hundreds of tracts with low latency.
+For example, if Parquet files are used to store tables of metric values, it would be preferable for such tables to be stored at the per-tract level instead of the per-patch level, to minimize lots of I/O of small files when loading multiple tracts of data at once.
+
+In order to facilitate joining and filtering metric values by other metadata, metric values should have appropriate Butler dataIds.
+
+\begin{recommendation}
+    {rec:sec:comp:metric:define:dataId}
+    {Metric values should have Butler dataIds}
+\end{recommendation}
+
+\begin{recommendation}
+    {rec:sec:comp:metric:define:butler}
+    {It should be possible to use the Butler to persist and retrieve metric values}
+\end{recommendation}
+
+\subsubsection{Collecting metrics}
+\label{sec:comp:metric:collect}
 
 The SQuaRE team has also developed the \texttt{lsst.verify} package which enables the convenient packaging of metric values and submission to SQuaSH, the metric tracking dashboard (\S\ref{sec:comp:metric:dashboard}).
 
 We have some concerns that adoption of this system has been slow.
 In part, that might be due to it being developed relatively independently of ongoing work on the Science Pipelines and without substantial external input to or review of the design.
 However, we believe that there are a small number of concrete steps which can be taken to address this.
-
-\begin{recommendation}
-    {rec:comp:metric:collect:verifydocs}
-    {Provide a single, reliable set of documentation describing the metric definition and collection system}
-    In particular, mentions of old, obsolete packages\footnote{e.g. \texttt{lsst.validate.base}} should be expunged, and a clear set of introductory documentation should be provided which does not refer to informal technotes describing vaguely-specified design goals (\citeds{SQR-017, SQR-019}).
-    In the process of developing this documentation, work closely with a named stakeholder in the Pipelines group to ensure that their needs are being adequately met; some redesign of existing code may be necessary.
-\end{recommendation}
 
 \begin{recommendation}
     {rec:comp:metric:collect:verifypipe}
