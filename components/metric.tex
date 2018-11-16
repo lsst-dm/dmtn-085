@@ -3,7 +3,7 @@
 
 This section is derived from \S\S\ref{sec:design:drill} and \ref{sec:design:test:metrics}.
 
-We note that metrics describing pipeline execution may be considered in two seaprate --- but related --- contexts.
+We note that metrics describing pipeline execution may be considered in two separate --- but related --- contexts.
 In some cases, we care simply about the absolute value of some metric value: is the performance ``good enough''?
 Does it satisfy a requirement?
 In other circumstances, we might wish to keep track of a metric value as a time series: does performance change with time?
@@ -31,12 +31,12 @@ It may be combined with the debugging system (\S\ref{sec:comp:debug}) to provide
 We suggest that there is no advantage to attempting to force some new framework onto developers operating in this mode.
 
 However, at the level of long-term monitoring of pipeline performance, and especially at the level of requirements verification, we suggest that having a standardized, code-based definition of metrics is essential to enable clear and unambiguous comparison of results.
-The SQuaRE team has developed the \texttt{lsst.verify.metrics}\footnote{\url{https://github.com/lsst/verify_metrics}} system to facilitiate the centralised definition of metrics, which we regard as a key step in the right direction.
+The SQuaRE team has developed the \texttt{lsst.verify.metrics}\footnote{\url{https://github.com/lsst/verify_metrics}} system to facilitate the centralised definition of metrics, which we regard as a key step in the right direction.
 
 \begin{recommendation}
     {rec:comp:metric:define:verifymetrics}
     {Formalise the \texttt{lsst.verify.metrics} system as the source of truth for metric definitions, by e.g. describing it in \citeds{LDM-503} and \citeds{LDM-639}}
-    This should be taken as a blanket endorsement of the current implementation of this system; \S\ref{sec:comp:metric:define} proides a number of recommendations as to the way that metrics are defined.
+    This should be taken as a blanket endorsement of the current implementation of this system; \S\ref{sec:comp:metric:define} provides a number of recommendations as to the way that metrics are defined.
 \end{recommendation}
 
 \begin{recommendation}
@@ -47,7 +47,7 @@ The SQuaRE team has developed the \texttt{lsst.verify.metrics}\footnote{\url{htt
 \end{recommendation}
 
 Many metrics are defined as statistical aggregates of a per-source computed quantity --- for example, FWHM or shape --- over a defined selection of sources.
-In order to enable a low-latency drill-down workflow and analyst flexibility, we recommend that for such metrics, the per-source computations be calculated and stored for \emph{all} sources, and that the selection and aggregation steps be logically seperate.
+In order to enable a low-latency drill-down workflow and analyst flexibility, we recommend that for such metrics, the per-source computations be calculated and stored for \emph{all} sources, and that the selection and aggregation steps be logically separate.
 For metrics computed in this way, the maximum storage granularity should be considered to be at the source level.
 
 \begin{recommendation}
@@ -57,7 +57,7 @@ For metrics computed in this way, the maximum storage granularity should be cons
 
 Other metrics may not be well-defined at the source level, such as the slope of the stellar locus in a given color-color space, or other similar metrics that require fitting a model to many sources at once.
 Such metrics cannot follow this same compute--select--aggregate model, and will have a different maximum granularity (e.g., patch, tract, CCD, visit, or dataset).
-This maximum granularity should be explictly defined in the definition of the metric.
+This maximum granularity should be explicitly defined in the definition of the metric.
 
 \begin{recommendation}
     {rec:sec:comp:metric:define:granularity}
@@ -66,7 +66,7 @@ This maximum granularity should be explictly defined in the definition of the me
 
 Re-running pipelines to recompute metrics imposes a significant overhead to the analyst.
 We therefore recommend that in general all computed metric values should be stored on disk at the highest relevant granularity.
-In some cases these are per-source and may be included in the relevant object catalogs or in postprocessed tables; in others, the minimum granularity may be at the CCD, patch, or even dataset levels.
+In some cases these are per-source and may be included in the relevant object catalogs or in post-processed tables; in others, the minimum granularity may be at the CCD, patch, or even dataset levels.
 This procedure provides the analyst the ability to filter metric values using arbitrary metadata (night, airmass, focal plane position, moon phase, etc) and re-aggregate to any level desired with any aggregation function (mean, median, percentiles, standard deviation, outliers, etc).
 Supplemental storage of higher-level aggregates (e.g., mean FWHM by CCD) is discouraged because of duplication and loss of information, except where speed of visualization of \emph{key} quantities would be impaired due to the need to load large datasets.
 
@@ -140,7 +140,7 @@ To date, SQuaSH has been used to follow a set of metrics derived from high-level
 It has been designed, though, to enable use by individual developers to track metrics which are of interest only to them, or relevant a particular subset of the codebase on which they are working.
 
 The Working Group feels that the major value in the SQuaSH system is in tracking and responding to regressions in performance (be they scientific or run-time) as the code changes.
-In this respect, it is in some ways analagous to the \gls{ci} system (\S\ref{sec:comp:ci}), and benefits from many of the same recommendations.
+In this respect, it is in some ways analogous to the \gls{ci} system (\S\ref{sec:comp:ci}), and benefits from many of the same recommendations.
 
 \begin{recommendation}
     {rec:comp:metric:dashboard:alert}
@@ -148,7 +148,7 @@ In this respect, it is in some ways analagous to the \gls{ci} system (\S\ref{sec
     Key stakeholders should include:
     \begin{itemize}
       \item{Senior DM management (DM Project Manager, DM Subsystem Scientist, Pipelines Scientist, Science Pipelines T/CAMs and Science Leads);}
-      \item{The developer who casued the regression, if it is possible to identify them (e.g. through commit logs).}
+      \item{The developer who caused the regression, if it is possible to identify them (e.g. through commit logs).}
     \end{itemize}
     This will require careful design, as it may be in tension with the desire to enable developers to define arbitrary metrics for their own use: clearly, key stakeholders will not wish to be informed of every developed-defined metric which suffers a regression.
     We suggest that, for example, a ``subscription list'' for each metric be defined, and the key stakeholders automatically be added to it for all metrics deriving directly from high-level requirements.
@@ -174,7 +174,7 @@ However, if the metric submission system captures appropriate information, it wo
 \end{recommendation}
 
 We recognize that developers may wish to submit results to SQuaSH from a variety of systems.
-In particular, it must not be dependent upon a particular expection environment (e.g. Jenkins).
+In particular, it must not be dependent upon a particular execution environment (e.g. Jenkins).
 
 \begin{recommendation}
     {rec:comp:metric:dashboard:agnostic}
