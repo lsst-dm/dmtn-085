@@ -7,7 +7,7 @@ The DM subsystem curates a number of ``datasets'': collections of data related b
 These themes might include originating from the same instrument or facility (e.g. testdata\_cfht); being used to test a particular package (e.g. testdata\_jointcal); or addressing some particular science case (e.g. ap\_verify\_hits2015).
 
 Currently, DM's datasets are heterogeneous: there is no accepted standard for the type of data that a dataset should contain, and nor is there any standard for where the dataset is stored or how it is curated.
-Some of DM's datsets are stored on \gls{gpfs} at the LSST Data Facility; some are made available through Git LFS\footnote{\url{https://git-lfs.github.com}; \url{https://developer.lsst.io/git/git-lfs.html}}; some contain only raw data; some contain calibration data; some contain processed data; some are regularly updated; some have documentation describing in detail what the dataset contains.
+Some of DM's datasets are stored on \gls{gpfs} at the LSST Data Facility; some are made available through Git LFS\footnote{\url{https://git-lfs.github.com}; \url{https://developer.lsst.io/git/git-lfs.html}}; some contain only raw data; some contain calibration data; some contain processed data; some are regularly updated; some have documentation describing in detail what the dataset contains.
 
 This lack of standardization limits the reuse of datasets (it is hard to reuse a dataset curated for one purpose for some other test unless one fully understands its contents) and means that developers often struggle to find the most appropriate data to test or debug some particular algorithm.
 
@@ -31,7 +31,7 @@ The key desiderata for standardizing the format of test datasets are:
 }
 \item{
     Besides raw (unprocessed) data, intermediate and final data products from various stages of pipeline processing are desired.
-    They facilitiate testing of algorithms which are only relevant to later parts of the pipeline or analysis codes without the need of regenerating the products.
+    They facilitate testing of algorithms which are only relevant to later parts of the pipeline or analysis codes without the need of regenerating the products.
 }
 \item{
     Datasets require continuing maintenance.

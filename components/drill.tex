@@ -25,7 +25,7 @@ This is separate from, and in addition to, the SQuaSH dashboard (\S \ref{sec:com
 
 A developer will load the dashboard by visiting a particular URL.
 They will then enter the path to a data repository\footnote{On some accessible filesystem; this assumes that the QA system is running e.g. on a host at the LSST Data Facility with access to \texttt{/scratch} or \texttt{/project}} which contains metric values.
-They will be presented with the ``quick look'' screen as shown in Fig. \ref{fig:comp:drill:quick} which summarises the results of the data processing.
+They will be presented with the ``quick look'' screen as shown in Fig. \ref{fig:comp:drill:quick} which summarizes the results of the data processing.
 
 The dashboard will generate summary information on the fly by introspecting the repository.
 It follows that, in addition to the metric values themselves, the repository will also contain metadata that describes:
@@ -34,7 +34,7 @@ It follows that, in addition to the metric values themselves, the repository wil
     \item{What selection was done on the source catalog to compute each metric?}
     \item{What is an acceptable value for each metric for this particular data set?}
 \end{itemize}
-The developer will have a choice to explore either the metrics in a single repository, or the differences in metrics between two data repositories by entring a ``comparison repository'' in addition to the primary one (that necessarily would need to have the same metrics computed as the primary).
+The developer will have a choice to explore either the metrics in a single repository, or the differences in metrics between two data repositories by entering a ``comparison repository'' in addition to the primary one (that necessarily would need to have the same metrics computed as the primary).
 
 The high-level landing page of this dashboard should allow for at-a-glance summary of the data and identification of any problems.
 The overall data summary could be in a header displaying the some numbers of interest, such as number of tracts, numbers of visits per filter, total numbers of sources, etc.
@@ -58,7 +58,7 @@ This could by default show the data for all tracts, but tract-aggregated informa
 Upon clicking upon a specific tract, then only the points for that tract will be selected (both in sky plot and scatter plot), and then the sky plot would then display patch-summarized data.
 Similarly, from here, clicking on a patch would load up just the data in that patch.
 
-This metric dashboard should also allow simulataneous visualization of different metrics, to allow cross-filtering.
+This metric dashboard should also allow simultaneous visualization of different metrics, to allow cross-filtering.
 This might be accomplished, for example, by having a sidebar listing the metrics, and being able to use it to either switch between metrics or to select multiple metrics.
 
 There should be an analogous drill-down mode for exploring visit-level data, with the drill-down levels being visit$\rightarrow$CCD rather than tract$\rightarrow$patch.
@@ -72,4 +72,4 @@ This system would enable a developer to quickly identify bad visits for a partic
     {The dashboard should enable the analyst to start a Jupyter notebook session with the relevant datasets already loaded}
 \end{recommendation}
 
-From the metric dashboard, there could be an ``explore in Jupyter'' button that would load up the dataset in the Jupyterlab environment, which would provide all the tools to make the dashboard visualizations, with the additional flexibility for ad-hoc exploration that the notebook provides.
+From the metric dashboard, there could be an ``explore in Jupyter'' button that would load up the dataset in the JupyterLab environment, which would provide all the tools to make the dashboard visualizations, with the additional flexibility for ad-hoc exploration that the notebook provides.
