@@ -41,7 +41,7 @@ If ongoing middleware development renders this obsolete, then it can be retired.
 \subsubsection{Image visualization}
 \label{sec:comp:vis:image}
 
-The concern among developers about what they ``ought'' to be doing is particular acute when considering image visualization: developers are universally familiar with SAOImage DS9\footnote{\url{http://ds9.si.edu/}}, but also aware of other afwDisplay back-ends (Ginga\footnote{https://ginga.readthedocs.io/}, Matplotlib\footnote{https://matplotlib.org}), and aware that project resources are being spent on Firefly.
+The concern among developers about what they ``ought'' to be doing is particular acute when considering image visualization: developers are universally familiar with SAOImage DS9\footnote{\url{http://ds9.si.edu/}}, but also aware of other afwDisplay back-ends (Ginga\footnote{\url{https://ginga.readthedocs.io/}}, Matplotlib\footnote{\url{https://matplotlib.org}}), and aware that project resources are being spent on Firefly.
 This uncertainty is compounded because most developers are unaware of long-term plans for Firefly, and even among system management there is uncertainty about the Firefly development timeline and the extent to which Firefly development is able to accommodate emergent work and requests in response to ongoing development.
 
 \begin{recommendation}
@@ -74,39 +74,10 @@ In addition to the above, we identify three separate ways in which users wish to
 We note that there are a number of LSST-specific requirements on image visualization.
 These include display of LSST-style image masks, \texttt{Footprint}s, and other specialized classes, as well as a mechanism for conveniently visualizing the full focal plane.
 
-The QAWG regards Firefly as the only viable choice for addressing all LSST-specific requirements and operating in all of the environments required by LSST.
-However, for this to be practical, it is essential that Firefly development is aligned with the Pipelines development roadmap: there is no utility (from the point of view of this working group) in delivering a high-quality product which is too late to be used by the construction project.
-This alignment requires that Firefly development have specific resources assigned to support the Pipeline construction effort.
+Previous drafts of this document identified Firefly as the only viable choice for addressing LSST-specific requirements and operating in all of the environments required by LSST.
+Unfortunately, following the recent changes to the scope of the DM Science User Interface and Tools group (\citeds{DMTN-096}) it no longer seems practical to go ``all in'' on Firefly: we do not expect Firefly to receive the concentrated attention on usability, responsiveness and LSST specific features which it would require to become a subsystem-wide standard.
 
-\begin{recommendation}
-  {rec:comp:vis:image:firefly}
-  {DM should go ``all in'' on Firefly development in support of Pipelines development}
-That is, an immediate priority should be to deliver a productised version of Firefly that addresses the majority of existing developer needs.
-As time passes, the utility of such a tool to the construction project rapidly diminishes: making this useful requires rapid and concentrated action.
-\end{recommendation}
-
-We note that Firefly development is (arguably) hampered by the need to follow the (generic) afwDisplay API: this makes it more awkward to exploit new capabilities provided by the Firefly system from within LSST-standard Python code.
-
-\begin{recommendation}
-  {rec:comp:vis:image:afwdisplay}
-  {The afwDisplay API should be augmented to enable backend-specific ``added value'' functionality}
-\end{recommendation}
-
-The QAWG will not attempt to provide a ``laundry list'' of Firefly features which are essential to Pipelines developers: we believe this is most effectively accomplished by having Firefly and Pipelines developers work in a tight loop with each other over an extended period.
-However, we note that an oft-repeated request is for a fast and convenient user interface: developers are very concerned that moving away from a desktop application to a web-based paradigm results in a tool that is slower and ``clunkier'' to use.
-We suggest that streamlining the Firefly user experience is likely more important to adoption than any individual feature request.
-
-\begin{recommendation}
-  {rec:comp:vis:image:firefly:use}
-  {In the short term, Firefly development should focus on usability and responsiveness as much as on features}
-\end{recommendation}
-
-Finally, we note that it is inconceivable that DS9 (or, likely, the other afwDisplay backends) will be removed, and that some users will continue to prefer them, especially for operating on personal laptops.
-We do not see a problem with this, as long as the project maintains a clear message and direction of development.
-
-\begin{recommendation}
-  {rec:comp:vis:image:firefly:install}
-  {Provide easy instructions for getting started with Firefly on a standalone system}
-Although DS9 et al. will never vanish, making it possible for developers to quickly bootstrap a Firefly system as easily as DS9 (which effectively involves downloading a single executable from a website and running it) will substantially improve the user experience on personal laptops.
-Solutions like Docker containers may be appropriate to this (but even there, effort must be taken to make things as frictionless as possible).
-\end{recommendation}
+With some reluctance, therefore, the working group concludes that for the remainder of construction DM developers will continue to operate with a heterogeneous mixture of visualization tools.
+We regard this as a significant threat to the overall efficiency of the construction effort, but are unable to suggest an alternative approach within the established schedule, scope and budgetary constraints on the subsystem.
+We are further concerned about the lack of high-quality visualization tooling available to the commissioning and science validation efforts --- and, indeed, about the knock-on effects on what tooling will be available to analyse LSST data during the operational era.
+However, these concerns are out of scope for this group.
