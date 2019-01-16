@@ -3,7 +3,7 @@
 
 This component is derived from \S\ref{sec:design:debug}.
 
-The existing pipeline debugging system, lsstDebug, provides useful
+The existing pipeline debugging system, \texttt{lsstDebug}, provides useful
 capabilities, but --- perhaps due to an idiosyncratic user interface and lack
 of documentation --- is frequently not properly exploited. Since the total
 amount of code involved in the old system, both implementing it and using it,
@@ -38,14 +38,14 @@ Developers and users rightly expect that the debugging system will provide an
 idiomatic user interface. We suggest that the complexity of the existing
 lsstDebug interface has been a bar to adoption. We therefore propose that
 simplicity be key aim of the new system. In that vein, we suggest that the
-debugging system should be controlled by a single boolean parameter, with no
+debugging system should be controlled by a single Boolean parameter, with no
 further user-driven customization, and with very explicit documentation. We
-acknowledge that this is a direct tradeoff between granularity and simplicity,
+acknowledge that this is a direct trade-off between granularity and simplicity,
 and suggest that history drives us to err on the side of simplicity.
 
 \begin{recommendation}
     {rec:comp:debug:use}
-    {Debugging mode shoud be binary: it is either enabled or disabled, with no further configuration}
+    {Debugging mode should be binary: it is either enabled or disabled, with no further configuration}
     For example, within a \texttt{Task}, one might check if debugging mode is
     enabled with a statement like \texttt{if self.config.debug: ...}.
 \end{recommendation}
@@ -53,5 +53,5 @@ and suggest that history drives us to err on the side of simplicity.
 The natural consequence of this is that debugging of tasks involved by some
 form of middleware (e.g. \texttt{CmdLineTask}, \texttt{PipelineTask} called by
 an executor) should receive an explicit argument enabling debugging. All other
-callables which support debugging must take an explict argument which enables
+callables which support debugging must take an explicit argument which enables
 it.
