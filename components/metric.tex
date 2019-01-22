@@ -36,7 +36,7 @@ The SQuaRE team has developed the \texttt{lsst.verify.metrics}\footnote{\url{htt
 \begin{recommendation}
     {rec:comp:metric:define:verifymetrics}
     {Formalise the \texttt{lsst.verify.metrics} system as the source of truth for metric definitions, by e.g. describing it in \citeds{LDM-503} and \citeds{LDM-639}}
-    This should be taken as a blanket endorsement of the current implementation of this system; \S\ref{sec:comp:metric:define} provides a number of recommendations as to the way that metrics are defined.
+    This should \textbf{not} be taken as a blanket endorsement of the current implementation of this system; \S\ref{sec:comp:metric:define} provides a number of recommendations as to the way that metrics are defined.
 \end{recommendation}
 
 \begin{recommendation}
@@ -117,8 +117,7 @@ However, we believe that there are a small number of concrete steps which can be
 \begin{recommendation}
     {rec:comp:metric:collect:verifypipe}
     {Develop clear guidelines for integrating metric collection with pipeline code}
-    \citeds{DMTN-057} suggested a number of ways in which this might be done, but indecision has caused paralysis.
-    The onus is on the Pipelines group to adopt one of these approaches (or develop an alternative)\footnote{Note \jira{DM-16016} in this context.}.
+    \citeds{DMTN-057} suggested a number of ways in which this might be done; \citeds{DMTN-098} and related work has begun development of a specific approach, which may evolve into an accepted standard.
 \end{recommendation}
 
 \begin{recommendation}
@@ -179,13 +178,4 @@ In particular, it must not be dependent upon a particular execution environment 
 \begin{recommendation}
     {rec:comp:metric:dashboard:agnostic}
     {It must be possible to submit metrics to SQuaSH from arbitrary pipeline execution environments}
-\end{recommendation}
-
-When handling large datasets, there is value to tracking metric values computed over subsets of the whole.
-For example, it may be more relevant to track how photometric repeatability varies over some patch, rather than over the whole sky.
-
-\begin{recommendation}
-    {rec:squash:dataId}
-    {SQuaSH should be able to store and display metric values per DataId}
-    For example, CCD, visit, patch, tract, filter.
 \end{recommendation}
