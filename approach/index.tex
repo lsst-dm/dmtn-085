@@ -1,13 +1,13 @@
 \section{Approach to the Problem}
 \label{sec:approach}
 
-The QAWG addressed its charge by sub-dividing the problem space into three separate areas:
+The QAWG addressed its charge by sub-dividing the problem space into three separate --- but overlapping --- areas:
 
 \begin{itemize}
 
   \item{Addressing the needs of developers writing and debugging algorithms on the small scale;}
   \item{Developing tooling to address the \textit{\gls{drill down}} use case;}
-  \item{Providing the infrastructure needed to support automatic testing and verification.}
+  \item{Providing the infrastructure needed to support automated testing and verification.}
 
 \end{itemize}
 
@@ -15,9 +15,9 @@ Each of these areas were assigned to a separate sub-group within the WG for
 brainstorming and developing approaches, with each sub-group regularly
 reporting progress to overall working group meetings.
 
-When each sub-group had developed a strong concept for the tooling needed to
-address their particular part of the charge, the whole working group reviewed
-each design in detail, identifying and developing specifications for common
+As each sub-group developed a strong concept for the tooling needed to address
+their particular part of the charge, the whole working group reviewed each
+design in detail, identifying and developing specifications for common
 components or activities that enable one or more of the designs.
 
 In \S\S\ref{sec:approach:debug}, \ref{sec:approach:drill} and
@@ -36,8 +36,8 @@ Specifically:
   \item{Is \texttt{lsstDebug} adequate?}
   \item{Do we need an \texttt{afwFigure}, for generating plots, to go alongside \texttt{afwDisplay}, for showing images?}
   \item{What additional capabilities are needed for developers running and debugging at scale, e.g. log collection, identification of failed jobs, etc.}
-  \item{What's needed from an image viewer for pipeline developers? Is DS9 or Firefly adequate? Is there value to the afwDisplay abstraction layer, or does it simply make it harder for us to use Firefly's advanced features?}
-  \item{How do we view images which don't fit in memory on a single node?}
+  \item{What's needed from an image viewer for pipeline developers? Is DS9 or Firefly adequate? Is there value to the \texttt{afwDisplay} abstraction layer, or does it simply make it harder for us to use Firefly's advanced features?}
+  \item{How do we view images that don't fit in memory on a single node?}
   \item{How do we handle fake sources? Is this a provenance issue?}
 
 \end{itemize}
@@ -51,9 +51,9 @@ data products that contributed to them? Specifically:
 
 \begin{itemize}
 
-  \item{What sort of metrics should be extracted from running pipelines\footnote{Scalars, vectors, spatially binned quantities, etc.}?}
+  \item{What types of metric should be extracted from running pipelines\footnote{Scalars, vectors, spatially binned quantities, etc.}?}
   \item{How can those metrics be displayed on a dashboard? Is a simple time-series adequate, or do we need other types of plotting?}
-  \item{By what mechanism can the user drill-down from those aggregated metrics to identify the sources of problems? Do they click through pre-generated plots, or jump straight into a notebook environment?}
+  \item{By what mechanism can the user drill-down from those aggregated metrics to identify sources of problems? Do they click through pre-generated plots, or jump straight into a notebook environment?}
   \item{Assuming the user ends up in an interactive environment, what are its capabilities?}
   \item{What do the above tell us about the data products that pipelines need to persist (both in terms of metrics that are posted to \gls{squash}, and regular pipeline outputs, Parquet tables, HDF5 files, etc)?}
 
@@ -69,8 +69,8 @@ of the DM system? Specifically:
 
   \item{Are any changes needed to the way that DM currently handles unit testing?}
   \item{How are datasets made available to developers? Git LFS repositories?  \gls{gpfs}?}
-  \item{What is the appropriate cadence for running small/medium/large scale integration tests and reprocessing of known data?}
+  \item{What is the appropriate cadence for running small/medium/large scale integration tests and reprocessing of fixed datasets?}
   \item{How is the system for tracking \glspl{metric} managed? --- how are the metric calculation jobs run? By whom? How often?}
-  \item{How run-time performance of the science algorithms be tracked?}
+  \item{How should run-time performance of the science algorithms be tracked?}
 
 \end{itemize}

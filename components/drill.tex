@@ -36,10 +36,10 @@ It follows that, in addition to the metric values themselves, the repository wil
 \end{itemize}
 The developer will have a choice to explore either the metrics in a single repository, or the differences in metrics between two data repositories by entering a ``comparison repository'' in addition to the primary one (that necessarily would need to have the same metrics computed as the primary).
 
-The high-level landing page of this dashboard should allow for at-a-glance summary of the data and identification of any problems.
-The overall data summary could be in a header displaying the some numbers of interest, such as number of tracts, numbers of visits per filter, total numbers of sources, etc.
+The high-level landing page of this dashboard should allow for an at-a-glance summary of the data and identification of any problems.
+The overall data summary could be in a header displaying the numbers of interest, such as number of tracts, numbers of visits per filter, total numbers of sources, etc.
 At-a-glance identification of problems could be accomplished by displaying fully-rolled-up metric summary values in a minimalist but informative format, such as an array of color-coded buttons or a color-coded table (e.g., green for good, red for bad).
-This top-level dashboard page should also have minimal but useful visualizations, such as an RA/dec plot of a single metric value (perhaps switchable via drop-down menu).
+This top-level dashboard page should also have minimal but useful visualizations, such as an RA/Dec plot of a single metric value (perhaps switchable via drop-down menu).
 
 \begin{figure}
   \begin{center}
@@ -55,7 +55,7 @@ Selecting any metric from the top-level page should load up a metric-detail page
 The layout and function of this page will depend on the type of metric.
 As an example, for metrics derived directly from individual source measurements, it might display a scatter plot of the metric values vs. source magnitude, as well as an RA/Dec scatter plot colormapped by metric value.
 This could by default show the data for all tracts, but tract-aggregated information could be available for each tract on hovering over the sky map.
-Upon clicking upon a specific tract, then only the points for that tract will be selected (both in sky plot and scatter plot), and then the sky plot would then display patch-summarized data.
+Upon clicking upon a specific tract, then only the points for that tract will be selected (both in sky plot and scatter plot), and the sky plot would then display patch-summarized data.
 Similarly, from here, clicking on a patch would load up just the data in that patch.
 
 This metric dashboard should also allow simultaneous visualization of different metrics, to allow cross-filtering.

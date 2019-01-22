@@ -11,8 +11,9 @@ following major ``pain points'' for developers:
 \begin{itemize}
 
   \item{The pipeline debugging system, \texttt{lsstDebug}, is badly documented
-  and awkward to use, and developers lack appropriate guidelines on how to use
-  it effectively.}
+  and awkward to use, and developers lack appropriate guidelines on how embed
+  debugging information into algorithms or on how to use that information to
+  most effectively debug running pipelines.}
 
   \item{Developers find it hard to know how to debug their code when it is
   running at scale. Issues include parsing logs when a large number of
@@ -28,13 +29,13 @@ following major ``pain points'' for developers:
   around its suitability for the task and its future development direction.},
   but also applies to catalog data.}
 
-  \item{Developers struggle to get access to data for running tests --- both
-  small and large scale --- in a convenient form. Large repositories exist on
-  the project \gls{gpfs} system, but it's unclear what they contain or how
-  to effectively access them\footnote{A canonical example is the \gls{hsc}
-  public data release: the volume of data is overwhelming for a developer who
-  simply needs some representative \gls{hsc} data to test an algorithm.};
-  smaller repositories exist on GitHub\footnote{e.g.
+  \item{Developers struggle to identify suitable datasets for running tests
+  --- both small and large scale --- in a convenient form. Large repositories
+  exist on the project \gls{gpfs} system, but it's unclear what they contain
+  or how to effectively access them\footnote{A canonical example is the
+  \gls{hsc} public data release: the volume of data is overwhelming for a
+  developer who simply needs some representative \gls{hsc} data to test an
+  algorithm.}; smaller repositories exist on GitHub\footnote{e.g.
   \href{https://github.com/lsst/validation_data_hsc}{validation\_data\_hsc},
   \href{https://github.com/lsst/afwdata}{afwdata},
   \href{https://github.com/lsst/ap_verify_hits2015}{ap\_verify\_hits2015},
@@ -53,7 +54,7 @@ number of separate-but-related components. These include:
 \begin{itemize}
 
   \item{An updated system for instrumenting running pipeline code;
-  effectively, a revision of lsstDebug. This is developed further in
+  effectively, a revision of \texttt{lsstDebug}. This is developed further in
   \S\ref{sec:comp:debug}.}
 
   \item{A revised set of tooling for generating, aggregating and analyzing
@@ -71,7 +72,7 @@ number of separate-but-related components. These include:
 
 \end{itemize}
 
-In addition, the WG suggests that prioritization of developer-accessible
+In addition, the WG suggests prioritization of developer-accessible
 systems for tracking and understanding the \gls{provenance} of pipeline
 outputs. For additional comments on provenance from a QA perspective, refer to
-\S\ref{sec:comp:provenance}
+\S\ref{sec:comp:provenance}.
