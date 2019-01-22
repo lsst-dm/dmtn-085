@@ -4,7 +4,7 @@
 This section is derived from \S\S\ref{sec:design:drill} and \ref{sec:design:test:metrics}.
 
 We note that metrics describing pipeline execution may be considered in two separate --- but related --- contexts.
-In some cases, we care simply about the absolute value of some metric value: is the performance ``good enough''?
+In some cases, we care simply about the absolute value of some metric: is the performance ``good enough''?
 Does it satisfy a requirement?
 In other circumstances, we might wish to keep track of a metric value as a time series: does performance change with time?
 Can we identify changesets which have introduced regressions (or improvements!)?
@@ -74,7 +74,7 @@ We note that this procedure will result in a substantial increase in catalog vol
 We suggest that metric value storage therefore be configurable through the regular pipeline configuration system.
 When working independently, developers may enable or disable at will depending on their use case; when running integration or other formalized tests, metrics will be stored for later analysis; metric storage when performing alert or data release processing is an operational decision.
 
-``\Gls{tidy data}'' is recommended as a best practice for data analysis workflows, as it simplifies filter-groupby-aggregate workflows.
+``\Gls{tidy data}'' \citep{JSSv059i10} is recommended as a best practice for data analysis workflows, as it simplifies filter-groupby-aggregate workflows.
 
 We expect that most analysts will be primarily interested in all values of a handful of metric columns at once, which suggests a column-store format will be optimal.
 The potentially large number of metrics and metric values argues for storage on-disk with the output repository itself.
@@ -83,11 +83,11 @@ This isolation also facilitates ad-hoc processing \& QA workflows by individual 
 \begin{recommendation}
     {rec:sec:comp:metric:define:tidy}
     {Metric values should be stored as ``tidy data'' in columnar data stores (e.g., \gls{parquet}) as part an output data repository}
-In particular, this should make it possible to load the data quickly enough for interactive work on $\sim$100s of tracts.
+In particular, this should make it possible to load the data quickly enough for interactive work on hundreds of tracts or an equivalent number of visits.
 \end{recommendation}
 
-Additionally, we also note that in order for interactive tools to be useful for visualizing results of large data repositories, the persistence model must allow for loading and aggregating metric values at the scale of tens to hundreds of tracts with low latency.
-For example, if Parquet files are used to store tables of metric values, it would be preferable for such tables to be stored at the per-tract level instead of the per-patch level, to minimize lots of I/O of small files when loading multiple tracts of data at once.
+Additionally, we note that in order for interactive tools to be useful for visualizing results of large data repositories, the persistence model must allow for loading and aggregating metric values at the scale of tens to hundreds of tracts with low latency.
+For example, if Parquet files are used to store tables of metric values, it would be preferable for such tables to be stored at the per-tract level instead of the per-patch level, to minimize I/O of small files when loading multiple tracts of data at once.
 
 In order to facilitate joining and filtering metric values by other metadata, metric values should have appropriate Butler dataIds.
 
@@ -96,7 +96,7 @@ In order to facilitate joining and filtering metric values by other metadata, me
     {Metric values should have Butler dataIds}
 \end{recommendation}
 
-As discussed in \S{sec:comp:metric}, the appropriate time to calculate a metric value may depend on the nature of the metric.
+As discussed in \S\ref{sec:comp:metric}, the appropriate time to calculate a metric value may depend on the nature of the metric.
 Some are calculated and stored in real-time as pipeline execution continues; others may be handled by ``afterburner'' analysis of existing data repositories.
 In either case, we suggest that close integration with the Data Butler is essential, and we believe the scheme presented here is compatible with the design of the ``Generation Three'' Butler.
 
@@ -123,7 +123,7 @@ However, we believe that there are a small number of concrete steps which can be
 
 \begin{recommendation}
     {rec:comp:metric:collect:adopt}
-    {Pipelines leadership should start using the metric definition and collection system.}
+    {Pipelines leadership should start using the metric definition and collection system}
     As the above recommendations are met, this system will be usable.
     However, driving adoption will require proactive measures from pipelines Product Owners and T/CAMs.
 \end{recommendation}
@@ -137,9 +137,9 @@ This enables the user to track the evolution of metric values with time, and rel
 SQuaSH has also been designed to provide some limited ``drill-down'' functionality to explore the way in which high-level metrics have been calculated.
 
 To date, SQuaSH has been used to follow a set of metrics derived from high-level LSST requirements and codified in the validate\_drp package.
-It has been designed, though, to enable use by individual developers to track metrics which are of interest only to them, or relevant a particular subset of the codebase on which they are working.
+It has been designed, though, to enable use by individual developers to track metrics which are of interest only to them, or relevant to a particular subset of the codebase on which they are working.
 
-The Working Group feels that the major value in the SQuaSH system is in tracking and responding to regressions in performance (be they scientific or run-time) as the code changes.
+The Working Group feels that the major value in the SQuaSH system is in tracking and responding to regressions in performance (be they scientific or run-time) as the code evolves.
 In this respect, it is in some ways analogous to the \gls{ci} system (\S\ref{sec:comp:ci}), and benefits from many of the same recommendations.
 
 \begin{recommendation}
@@ -150,7 +150,7 @@ In this respect, it is in some ways analogous to the \gls{ci} system (\S\ref{sec
       \item{Senior DM management (DM Project Manager, DM Subsystem Scientist, Pipelines Scientist, Science Pipelines T/CAMs and Science Leads);}
       \item{The developer who caused the regression, if it is possible to identify them (e.g. through commit logs).}
     \end{itemize}
-    This will require careful design, as it may be in tension with the desire to enable developers to define arbitrary metrics for their own use: clearly, key stakeholders will not wish to be informed of every developed-defined metric which suffers a regression.
+    This will require careful design, as it may be in tension with the desire to enable developers to define arbitrary metrics for their own use: clearly, key stakeholders will not wish to be informed of every developer-defined metric which suffers a regression.
     We suggest that, for example, a ``subscription list'' for each metric be defined, and the key stakeholders automatically be added to it for all metrics deriving directly from high-level requirements.
 \end{recommendation}
 
@@ -166,7 +166,7 @@ We believe that SQuaSH is capable of this, but existing ``big picture'' document
 
 We note that SQuaSH provides some drill-down capability to explore the source of metric values.
 We suggest that this should not be the core business of SQuaSH, and prefer to consider a separate drill-down environment (\S\ref{sec:comp:drill}); further development of these capabilities within SQuaSH should not be prioritised.
-However, if the metric submission system captures appropriate information, it would be possible to enable SQuaSH to automatically spawn a copy of the drill-down system pointing at the repository corresponding to a particular metric value submission.
+However, if the metric submission system captures appropriate information, it would be desirable to enable SQuaSH to automatically spawn a copy of the drill-down system pointing at the repository corresponding to a particular metric value submission.
 
 \begin{recommendation}
   {rec:comp:metric:dashboard:spawn}
@@ -181,7 +181,7 @@ In particular, it must not be dependent upon a particular execution environment 
     {It must be possible to submit metrics to SQuaSH from arbitrary pipeline execution environments}
 \end{recommendation}
 
-When handle large datasets, there is value to tracking metric values computed over subsets of the whole.
+When handling large datasets, there is value to tracking metric values computed over subsets of the whole.
 For example, it may be more relevant to track how photometric repeatability varies over some patch, rather than over the whole sky.
 
 \begin{recommendation}

@@ -35,24 +35,24 @@ The key desiderata for standardizing the format of test datasets are:
 }
 \item{
     Datasets require continuing maintenance.
-    Data products based on a recent software release are usually wanted.
+    Data products based on a recent software release are usually wanted (although older ones may also be useful to test backwards compatibility).
 }
 \end{itemize}
 
 These considerations aside, this WG does not make a specific recommendation about the detailed layout of datasets, beyond noting the existence of the Common Dataset Organization and Policy \footnote{\url{https://developer.lsst.io/services/datasets.html}} which might form a convenient basis for further development.
 
-Regardless of the layout adopted, expect that the dataset will need to evolve with time: as new versions of the LSST code are released, expectations about the both the contents of data repositories and the format of persisted data products will change, occasionally in backwards-incompatible ways.
+Regardless of the layout adopted, we expect that the dataset will need to evolve with time: as new versions of the LSST code are released, expectations about the both the contents of data repositories and the format of persisted data products will change, occasionally in backwards-incompatible ways.
 For a dataset to remain useful, active curation is required.
 
 \begin{recommendation}
     {rec:comp:dataset:owner}
     {Each dataset should have an explicitly named product owner}
 Product owners are responsible for ensuring that the content and use cases of the datasets are well described and compatible with recent stack versions.
-The owner of a dataset could often be the a member of team with immediate use cases and knowledge of the relevant camera package.
+The owner of a dataset could often be a member of the team with immediate use cases and knowledge of the relevant camera package.
 \end{recommendation}
 
 The variety of different sources and use-cases for datasets means that they span a wide range of sizes.
-It is therefore impractical to store and distribute them in the same way.
+It is therefore impractical to store and distribute them all in the same way.
 Instead, the QAWG suggests they can usefully be divided into two categories: \emph{small} and \emph{large}.
 
 \begin{description}

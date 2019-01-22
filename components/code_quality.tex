@@ -20,13 +20,13 @@ We believe that refreshing the developer-facing documentation, together with clo
 \begin{recommendation}
     {rec:comp:code_quality:unittest}
     {Obsolete and unclear sections of the Developer Guide should be rewritten to provide clearer guidance on unit tests}
-    This should include, for example:
+    This should include at least:
 \begin{itemize}
 
-  \item{Guidance for unit vs. integration tests, and which packages it is appropriate to write tests in (e.g. is it adequate for certain functionality only to be tested through packages like ci\_hsc?);}
+  \item{Guidance for unit vs. integration tests, and in which packages it is appropriate to write tests (e.g. is it adequate for certain functionality to be only tested through packages like ci\_hsc?);}
   \item{Requirements for code coverage;}
   \item{Appropriate languages for writing tests (should C++ code be tested in C++, or is it acceptable---or encouraged---to test only the Python-wrapped version?;}
-  \item{Are there certain types of code which it is appropriate not to test (e.g. boilerplate accessor methods)? How exhaustive should tests be?}
+  \item{Are there certain types of code that it is appropriate not to test (e.g. boilerplate accessor methods)? How exhaustive should tests be?}
 
 \end{itemize}
 
@@ -36,7 +36,7 @@ We believe that refreshing the developer-facing documentation, together with clo
 \label{sec:comp:code_quality:review}
 
 Various aspects of the unit test system, e.g. coverage requirements, are best enforced through code review.
-However, we currently provide minimal written guidelines to developers about what code reviewers should be looking for\footnote{e.g. ``is there adequate unit test coverage for the code?'', but with no guidance on what constitutes ``adequate''}.
+However, we currently provide minimal written guidelines to developers about what code reviewers should be insisting on\footnote{e.g. ``is there adequate unit test coverage for the code?'', but with no guidance on what constitutes ``adequate''.}.
 
 \begin{recommendation}
     {rec:comp:code_quality:review}

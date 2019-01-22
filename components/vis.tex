@@ -41,7 +41,7 @@ If ongoing middleware development renders this obsolete, then it can be retired.
 \subsubsection{Image visualization}
 \label{sec:comp:vis:image}
 
-The concern among developers about what they ``ought'' to be doing is particular acute when considering image visualization: developers are universally familiar with SAOImage DS9\footnote{\url{http://ds9.si.edu/}}, but also aware of other afwDisplay back-ends (Ginga\footnote{\url{https://ginga.readthedocs.io/}}, Matplotlib\footnote{\url{https://matplotlib.org}}), and aware that project resources are being spent on Firefly.
+The concern among developers about what they ``ought'' to be doing is particularly acute when considering image visualization: developers are universally familiar with SAOImage DS9\footnote{\url{http://ds9.si.edu/}}, but also aware of other \texttt{afwDisplay} back-ends (Ginga\footnote{\url{https://ginga.readthedocs.io/}}, Matplotlib\footnote{\url{https://matplotlib.org}}), and aware that project resources are being spent on Firefly.
 This uncertainty is compounded because most developers are unaware of long-term plans for Firefly, and even among system management there is uncertainty about the Firefly development timeline and the extent to which Firefly development is able to accommodate emergent work and requests in response to ongoing development.
 
 \begin{recommendation}
@@ -53,15 +53,15 @@ We identify two separate regimes of image visualization:
 
 \begin{enumerate}
 
-  \item{A developer is working on a laptop with a small amount of data and viewing image results locally;}
+  \item{A laptop with a small amount of data, where images and other results are inspected with local tools;}
   \item{A server-based environment, like the LSST Science Platform's Notebook Aspect, where centrally provided services have access to large amounts of data.}
 
 \end{enumerate}
 
 In the first case, a desktop application like DS9 may be convenient.
-However, in the second regime, a server-side visualization tool like Firefly provides more convenient access to the data: it enables us to bring image processing to the data, rather than image data to the display.
+However, in the second regime, a server-side visualization tool like Firefly provides more convenient access to the data: it enables us to bring image display tools to the data, rather than image data to the display.
 
-In addition to the above, we identify three separate ways in which users wish to use their visualization tool:
+In addition to the above, we identify three separate ways in which users may wish to use a visualization tool:
 
 \begin{enumerate}
 

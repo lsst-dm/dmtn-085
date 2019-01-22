@@ -12,36 +12,37 @@ approachable, system.
 
 \begin{recommendation}
     {rec:comp:debug}
-    {Develop a new pipeline instrumentation and debugging system, replacing lsstDebug}
+    {Develop a new pipeline instrumentation and debugging system, replacing \texttt{lsstDebug}}
 The total effort expended here should be modest: we expect that design,
 implementation and documentation of a new system should take no more than one
 full time equivalent month. Converting existing code make take somewhat
 longer.
 \end{recommendation}
 
-The capabilities of the new system would remain broadly the same as lsstDebug.
-Specifically, enabling debugging mode would set a flag within the codebase.
-Developers can check for that flag, and take appropriate actions (e.g.
-spawning additional plots) if it is set. However, establishing a baseline
-expectation of what actions are appropriate or expecting within this debugging
-context will require input from the leadership team.
+The capabilities of the new system would remain broadly the same as
+\texttt{lsstDebug}.  Specifically, enabling debugging mode would set a flag
+within the codebase.  Developers can check for that flag, and take appropriate
+actions (e.g.  spawning additional plots) if it is set. However, establishing
+a baseline expectation of what actions are appropriate or expected within
+this debugging context will require input from the leadership team.
 
 \begin{recommendation}
     {rec:comp:debug:docs}
     {Guidelines for the effective use of the pipeline debugging system should be supplied to developers}
 These guidelines should be supplied by the Science Pipelines Product Owners
 and the LSST Software Architect, and made available through the DM Developer
-Guide \citeds{DevGuide}.
+Guide\citeds{DevGuide}.
 \end{recommendation}
 
 Developers and users rightly expect that the debugging system will provide an
 idiomatic user interface. We suggest that the complexity of the existing
-lsstDebug interface has been a bar to adoption. We therefore propose that
-simplicity be key aim of the new system. In that vein, we suggest that the
-debugging system should be controlled by a single Boolean parameter, with no
-further user-driven customization, and with very explicit documentation. We
-acknowledge that this is a direct trade-off between granularity and simplicity,
-and suggest that history drives us to err on the side of simplicity.
+\texttt{lsstDebug} interface has been a bar to adoption. We therefore propose
+that simplicity be a key aim of the new system. In that vein, we suggest that
+the debugging system should be controlled by a single Boolean parameter, with
+no further user-driven customization, and with very explicit documentation. We
+acknowledge that this is a direct trade-off between granularity and
+simplicity, and suggest that history drives us to err on the side of
+simplicity.
 
 \begin{recommendation}
     {rec:comp:debug:use}
@@ -50,8 +51,8 @@ and suggest that history drives us to err on the side of simplicity.
     enabled with a statement like \texttt{if self.config.debug: ...}.
 \end{recommendation}
 
-The natural consequence of this is that debugging of tasks involved by some
+The natural consequence of this is that debugging of tasks invokved by some
 form of middleware (e.g. \texttt{CmdLineTask}, \texttt{PipelineTask} called by
 an executor) should receive an explicit argument enabling debugging. All other
-callables which support debugging must take an explicit argument which enables
+callables that support debugging must take an explicit argument that enables
 it.
