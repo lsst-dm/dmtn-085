@@ -179,12 +179,3 @@ In particular, it must not be dependent upon a particular execution environment 
     {rec:comp:metric:dashboard:agnostic}
     {It must be possible to submit metrics to SQuaSH from arbitrary pipeline execution environments}
 \end{recommendation}
-
-When handling large datasets, there is value to tracking metric values computed over subsets of the whole.
-For example, it may be more relevant to track how photometric repeatability varies over some patch, rather than over the whole sky.
-
-\begin{recommendation}
-    {rec:squash:dataId}
-    {SQuaSH should be able to store and display metric values per DataId}
-    For example, CCD, visit, patch, tract, filter.
-\end{recommendation}
