@@ -95,10 +95,10 @@ It is worth starting by revisiting the definition of Quality
 \textit{Assurance}, or \gls{qa}.  In particular, note that \citeds{LDM-522}
 defines QA as ``Quality \textit{Analysis}'', a process which is undertaken by
 humans during commissioning and operations, and which stands in contrast to
-automated \gls{qc} systems. For the purposes of this group, we have taken a
-more holistic definition (following the guidance in the charge) of \gls{qa},
-covering all activities undertaken by the \gls{dm} construction project to
-ensure the ultimate quality of its deliverables.
+automated Quality Control (\gls{qc}) systems. For the purposes of this group,
+we have taken a more holistic definition (following the guidance in the
+charge) of \gls{qa}, covering all activities undertaken by the \gls{dm}
+construction project to ensure the ultimate quality of its deliverables.
 
 The complete scope of ``\gls{qa} within \gls{dm}'' is too large to be
 coherently addressed by any group on a limited timescale. Per its charge,
@@ -106,10 +106,11 @@ then, the \gls{qawg} has constrained itself to considering only those aspects
 of \gls{qa} which are most directly relevant to the construction of the LSST
 Science Pipelines. In particular, we have considered the tools which
 developers need to construct and debug individual algorithms; tools which can
-be used to investigate the execution of at-scale pipeline runs; and tools
-which can be used to demonstrate that the overall system meets its
-requirements (to ``verify'' the system). This deliberately excludes broader
-requirements of Commissioning, Science Validation, or run-time
+be used to investigate the execution of pipeline runs at scales beyond those
+which are trivially addressable by individual developers on single compute
+systems; and tools which can be used to demonstrate that the overall system
+meets its requirements (to ``verify'' the system). This deliberately excludes
+broader requirements of Commissioning, Science Validation, or run-time
 \gls{sdqa}\footnote{Effectively, code executed during prompt or data release
 production processing to demonstrate that the data being both ingested and
 released is of adequate quality.}.
@@ -117,13 +118,13 @@ released is of adequate quality.}.
 This report consists broadly of three parts. In \S\ref{sec:approach}, we
 describe the approach that the \gls{qawg} took to addressing its charge. In
 \S\ref{sec:design}, we present a high-level overview of the systems that we
-envisage the future DM comprising. Finally, In \S\ref{sec:comp} we identify
+envisage the future DM comprising. Finally, in \S\ref{sec:comp} we identify
 specific components --- which may be pieces of software, documentation,
 procedures, or other artifacts --- that should be developed to enable the
 capabilities we regard as necessary. In some cases, these components may be
 entirely new developments; in others, existing tools developed by the \gls{dm}
 subsystem may already be fit for purpose, or can be adapted with some effort.
-we have noted when this is the case.
+We have noted when this is the case.
 
 Throughout, we provide a number of recommendations which we suggest should be
 adopted by the \gls{dm} Subsystem as a whole. These recommendations identify
@@ -132,8 +133,8 @@ in general, addressing them will require action by the Project Manager or
 T/CAMs to schedule appropriate activities.
 
 Finally, in Appendix \ref{glo:main}, we define a number of key terms which are
-used throughout this report and which we we suggest be adopted throughout
-\gls{dm} to provide an unambiguous vocabulary for referring to QA topics.
+used throughout this report and which we suggest be adopted across \gls{dm} to
+provide an unambiguous vocabulary for referring to QA topics.
 
 \begin{recommendation}
     {rec:glossary}
