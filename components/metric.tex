@@ -41,9 +41,11 @@ The SQuaRE team has developed the \texttt{lsst.verify.metrics}\footnote{\url{htt
 
 \begin{recommendation}
     {rec:comp:metric:define:docs}
-    {Provide a single, reliable set of documentation describing the metric definition system}
-    In particular, mentions of old, obsolete packages\footnote{e.g. \texttt{lsst.validate.base}} should be expunged, and a clear set of introductory documentation should be provided which does not refer to informal technotes describing vaguely-specified design goals (\citeds{SQR-017, SQR-019}).
-    In the process of developing this documentation, work closely with a named stakeholder in the Pipelines group to ensure that their needs are being adequately met; redesign of existing code may be necessary.
+    {Provide a high-level overview and data-model describing the metric definition system}
+    At present, the lack of material providing an overview of the system is a significant barrier to entry.
+    Although excellent API documentation is available, it is accompanied by references to technical notes describiing relatively vaguely-specified design goals and referring to concepts like ``provenance'' and ``specification'' which require further elucidation.
+    A revision of the documentation which expunges mention of old, obsolete packages\footnote{e.g. \texttt{lsst.validate.base}} and provides a clear set of gettting-started guidelines should be untertaken.
+    We suggest that that the SQuaRE group engage with one or more stakeholders in the Pipelines while working on this material.
 \end{recommendation}
 
 Many metrics are defined as statistical aggregates of a per-source computed quantity --- for example, FWHM or shape --- over a defined selection of sources.
@@ -108,11 +110,10 @@ In either case, we suggest that close integration with the Data Butler is essent
 \subsubsection{Collecting metrics}
 \label{sec:comp:metric:collect}
 
-The SQuaRE team has also developed the \texttt{lsst.verify} package which enables the convenient packaging of metric values and submission to SQuaSH, the metric tracking dashboard (\S\ref{sec:comp:metric:dashboard}).
-
-We have some concerns that adoption of this system has been slow.
-In part, that might be due to it being developed relatively independently of ongoing work on the Science Pipelines and without substantial external input to or review of the design.
-However, we believe that there are a small number of concrete steps which can be taken to address this.
+The \texttt{lsst.verify} package enables the conveneient packaging of \texttt{lsst.verify.metrics}-style metrics and their submission to the SQuaSH metric tracking dashboard (\S\ref{sec:comp:metric:dashboard}).
+We are concerned that the adoption of this system has been slow.
+In part, we expect this to be addressed by impreovements to the definition of metrics, as discussed in \S\ref{sec:comp:metric:define}.
+However, we also believe that it is now appopriate for Pipelines leadership to begin to actively engage with this system.
 
 \begin{recommendation}
     {rec:comp:metric:collect:verifypipe}
