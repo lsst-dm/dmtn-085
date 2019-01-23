@@ -110,11 +110,10 @@ In either case, we suggest that close integration with the Data Butler is essent
 \subsubsection{Collecting metrics}
 \label{sec:comp:metric:collect}
 
-The SQuaRE team has also developed the \texttt{lsst.verify} package which enables the convenient packaging of metric values and submission to SQuaSH, the metric tracking dashboard (\S\ref{sec:comp:metric:dashboard}).
-
-We have some concerns that adoption of this system has been slow.
-In part, that might be due to it being developed relatively independently of ongoing work on the Science Pipelines and without substantial external input to or review of the design.
-However, we believe that there are a small number of concrete steps which can be taken to address this.
+The \texttt{lsst.verify} package enables the conveneient packaging of \texttt{lsst.verify.metrics}-style metrics and their submission to the SQuaSH metric tracking dashboard (\S\ref{sec:comp:metric:dashboard}).
+We are concerned that the adoption of this system has been slow.
+In part, we expect this to be addressed by impreovements to the definition of metrics, as discussed in \S\ref{sec:comp:metric:define}.
+However, we also believe that it is now appopriate for Pipelines leadership to begin to actively engage with this system.
 
 \begin{recommendation}
     {rec:comp:metric:collect:verifypipe}
